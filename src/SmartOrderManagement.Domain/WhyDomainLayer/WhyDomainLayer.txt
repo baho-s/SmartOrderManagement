@@ -1,0 +1,90 @@
+﻿Domain katmanı neden var? 
+---------------------------------------------------------
+Sistemin kalbidir (core katman).
+İş kurallarının (business rules) yazıldığı yerdir.
+Uygulamanın “gerçek mantığını” barındırır.
+Hiçbir dış bağımlılığı yoktur (DB, API vs. bilmez).
+---------------------------------------------------------
+Görevi nedir?
+
+1. Business Kurallarını Yazar (EN ÖNEMLİ)
+Sistemin kuralları burada tanımlanır:
+Adet 0 olamaz
+Kullanıcı yaşı 18’den küçük olamaz
+Sipariş tutarı negatif olamaz
+👉 Kurallar burada YAZILIR
+
+2. Entity’leri (Model) Tanımlar
+Veritabanındaki tabloların karşılığıdır:
+Order
+Product
+User
+👉 Ama sadece veri değil, davranış da içerir
+
+3. Kuralları Kendi İçinde Korur
+Entity kendi kuralını bilir:
+👉 Order → kendi validasyonunu yapar
+👉 Product → kendi hesaplamasını yapar
+
+4. Diğer Katmanlardan Bağımsızdır
+Domain:
+❌ EF bilmez
+❌ SQL bilmez
+❌ API bilmez
+👉 Sadece iş mantığını bilir
+
+5. Tekrar Kullanılabilir (Çok kritik)
+Aynı Domain:
+Web API’de
+Mobil uygulamada
+Console app’te
+👉 Her yerde kullanılabilir
+---------------------------------------------------------
+❌ YAPILMAMASI GEREKEN
+Domain içinde:
+❌ DbContext kullanılmaz
+❌ API çağrısı yapılmaz
+❌ Mail gönderilmez
+👉 Bunlar Infrastructure işidir
+---------------------------------------------------------
+public class Order
+{
+    public int ProductId { get; set; }
+    public int Quantity { get; set; }
+
+    // 🔥 Business kuralı burada yazılır
+    public void CheckQuantity()
+    {
+        if (Quantity <= 0)
+            throw new Exception("Adet 0 olamaz");
+    }
+}
+
+API → Application → Domain → Infrastructure → Database
+---------------------------------------------------------
+KLASÖR YAPISI
+
+SmartOrderManagement.Domain
+│
+├── Entities
+│   ├── Order.cs
+│   ├── Product.cs
+│   └── Customer.cs
+│
+├── Common
+│   ├── BaseEntity.cs
+│   └── AuditableEntity.cs
+│
+├── ValueObjects
+│   ├── Address.cs
+│   └── Money.cs
+│
+├── Enums
+│   ├── OrderStatus.cs
+│   └── PaymentType.cs
+│
+├── Exceptions
+│   └── DomainException.cs
+│
+└── Events
+    └── OrderCreatedEvent.cs

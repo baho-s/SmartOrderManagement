@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.14.37012.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72D-47B6-A68D-7590B98EB39B}"
+	ProjectSection(SolutionItems) = preProject
+		KatmanlarVeKlasorYapisi.txt = KatmanlarVeKlasorYapisi.txt
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartOrderManagement.API", "src\SmartOrderManagement.API\SmartOrderManagement.API.csproj", "{52BDA531-AE3C-4E49-951E-BD66E5C9DC06}"
 EndProject
@@ -12,6 +15,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartOrderManagement.Domain", "src\SmartOrderManagement.Domain\SmartOrderManagement.Domain.csproj", "{7F01061C-26B9-447F-BC91-DE536C033D38}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartOrderManagement.Infrastructure", "src\SmartOrderManagement.Infrastructure\SmartOrderManagement.Infrastructure.csproj", "{4F342EB2-CF73-4FB5-8789-A42C804CC4BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartOrderManagementNUnitTest", "SmartOrderManagementNUnitTest\SmartOrderManagementNUnitTest.csproj", "{DBC619DD-653F-4AD8-992A-20D88AEF7CF9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,6 +76,18 @@ Global
 		{4F342EB2-CF73-4FB5-8789-A42C804CC4BE}.Release|x64.Build.0 = Release|Any CPU
 		{4F342EB2-CF73-4FB5-8789-A42C804CC4BE}.Release|x86.ActiveCfg = Release|Any CPU
 		{4F342EB2-CF73-4FB5-8789-A42C804CC4BE}.Release|x86.Build.0 = Release|Any CPU
+		{DBC619DD-653F-4AD8-992A-20D88AEF7CF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBC619DD-653F-4AD8-992A-20D88AEF7CF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBC619DD-653F-4AD8-992A-20D88AEF7CF9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DBC619DD-653F-4AD8-992A-20D88AEF7CF9}.Debug|x64.Build.0 = Debug|Any CPU
+		{DBC619DD-653F-4AD8-992A-20D88AEF7CF9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DBC619DD-653F-4AD8-992A-20D88AEF7CF9}.Debug|x86.Build.0 = Debug|Any CPU
+		{DBC619DD-653F-4AD8-992A-20D88AEF7CF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBC619DD-653F-4AD8-992A-20D88AEF7CF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBC619DD-653F-4AD8-992A-20D88AEF7CF9}.Release|x64.ActiveCfg = Release|Any CPU
+		{DBC619DD-653F-4AD8-992A-20D88AEF7CF9}.Release|x64.Build.0 = Release|Any CPU
+		{DBC619DD-653F-4AD8-992A-20D88AEF7CF9}.Release|x86.ActiveCfg = Release|Any CPU
+		{DBC619DD-653F-4AD8-992A-20D88AEF7CF9}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

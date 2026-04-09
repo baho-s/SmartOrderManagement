@@ -1,0 +1,100 @@
+﻿Infrastructure Katmanı neden var?
+---------------------------------------------------------
+Sistemin dış dünya ile iletişimini sağlar.Veritabanı, API,
+dosya sistemi gibi teknik işlemleri yapan katmandır.
+Application ile Database (ve diğer servisler) arasında köprü 
+görevi görür.
+---------------------------------------------------------
+Görevi nedir?
+
+1. Veritabanı İşlemlerini Yapar (EN ÖNEMLİ)
+CRUD işlemleri burada yapılır:
+Veri ekleme
+Veri silme
+Veri güncelleme
+Veri listeleme
+👉 EF Core / SQL işlemleri burada olur
+
+2. Repository Implementasyonu Buradadır
+Application sadece interface’i bilir:
+IOrderRepository
+👉 Ama gerçek kod burada yazılır
+
+3. Dış Servislerle İletişim Kurar
+Örnek:
+Mail gönderme
+SMS gönderme
+Harici API çağrısı
+👉 Tüm dış bağımlılıklar burada
+
+4. Teknik Detayları Gizler
+Application şunu bilmez:
+EF mi kullanılıyor?
+SQL mi?
+MongoDB mi?
+👉 Sadece şunu kullanır: _orderRepository.Add(order);
+
+5. Bağımlılıkları Yönetir (DI için kritik)
+Interface burada değil, yukarıda olur
+Ama implementasyon burada yapılır
+👉 Dependency Injection burada bağlanır
+
+API → Application → Domain → Infrastructure → Database
+---------------------------------------------------------
+❌ YAPILMAMASI GEREKEN
+Infrastructure içinde:
+❌ Business kuralı yazılmaz
+❌ Use-case yazılmaz
+👉 Sadece teknik işlemler olur
+---------------------------------------------------------
+public class EfOrderRepository : IOrderRepository
+{
+    private readonly AppDbContext _context;
+
+    public EfOrderRepository(AppDbContext context)
+    {
+        _context = context;
+    }
+
+    public void Add(Order order)
+    {
+        _context.Orders.Add(order);
+        _context.SaveChanges();
+    }
+}
+---------------------------------------------------------
+KLASÖR YAPISI
+
+SmartOrderManagement.Infrastructure
+│
+├── Persistence
+│   ├── Context
+│   │   └── AppDbContext.cs
+│   │
+│   ├── Repositories
+│   │   ├── OrderRepository.cs
+│   │   ├── ProductRepository.cs
+│   │   └── CustomerRepository.cs
+│   │
+│   ├── Configurations
+│   │   ├── OrderConfiguration.cs
+│   │   ├── ProductConfiguration.cs
+│   │   └── CustomerConfiguration.cs
+│   │
+│   └── Migrations
+│
+├── Services
+│   ├── EmailService.cs
+│   ├── TokenService.cs
+│   └── FileService.cs
+│
+├── Identity
+│   ├── JwtSettings.cs
+│   └── JwtHelper.cs
+│
+├── ExternalServices
+│   ├── PaymentGatewayService.cs
+│   └── SmsService.cs
+│
+└── DependencyInjection
+    └── ServiceRegistration.cs

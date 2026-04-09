@@ -1,0 +1,16 @@
+﻿using SmartOrderManagement.Domain.Entities;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace SmartOrderManagement.Application.Interfaces.Repositories
+{
+    public interface IProductRepository
+    {
+        Task AddAsync(Product product);
+        Task UpdateAsync(Product product);
+        Task DeleteAsync(Product product);
+        Task<List<Product>> GetProductsAsync();
+        Task<Product?> GetByIdAsync(int id);
+    }
+}

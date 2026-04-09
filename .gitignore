@@ -4,8 +4,8 @@
 *.suo
 
 # Build
-bin/
-obj/
+**/bin/
+**/obj/
 
 # Rider
 .idea/
@@ -16,3 +16,19 @@ obj/
 # OS
 .DS_Store
 Thumbs.db
+
+# Test results
+[Tt]est[Rr]esults/
+
+# VS temporary files
+*.vshost.exe
+*.vshost.exe.config
+*.vshost.exe.manifest
+*.lnx
+
+# JetBrains (Rider)
+.idea/
+*.sln.iml
+
+# VS Code
+.vscode/

@@ -1,0 +1,91 @@
+﻿SmartOrderManagement.API Katmanı neden var? Görevi nedir?
+---------------------------------------------------------
+API katmanı, dış dünyadan gelen istekleri alır ve Application
+katmanına iletir.
+---------------------------------------------------------
+Client (Postman / Frontend)
+        ↓
+API (Controller)
+        ↓
+Application (Service)
+        ↓
+Infrastructure (Repository / DbContext)
+        ↓
+Database
+---------------------------------------------------------
+🎯 Görevi nedir?
+-HTTP isteği alır
+-Application’a iletir
+-Response döner
+👉 Kısaca: Kapı 🚪
+---------------------------------------------------------
+📦 DTO olur mu?
+✔ EVET (en çok burada kullanılır)
+👉 Çünkü dış dünyaya veri verir / alır
+---------------------------------------------------------
+🔗 Kim ile konuşur?
+👉 Sadece Application ile
+❗ Neden?
+→ İş mantığı burada değildir, sadece yönlendirir
+---------------------------------------------------------
+Örn:
+[HttpPost]
+public IActionResult AddProduct(CreateProductDto dto)
+{
+    _productService.Add(dto);
+    return Ok();
+}
+
+API → Application → Domain → Infrastructure → Database
+---------------------------------------------------------
+KLASÖR YAPISI
+
+SmartOrderManagement.API
+│
+├── Controllers
+│   ├── OrdersController.cs
+│   ├── ProductsController.cs
+│   └── CustomersController.cs
+│
+├── Middlewares
+│   └── ExceptionMiddleware.cs
+│
+├── Filters
+│   └── ValidationFilter.cs
+│
+├── Extensions
+│   ├── ServiceCollectionExtensions.cs
+│   └── ApplicationBuilderExtensions.cs
+│
+├── Configurations
+│   └── SwaggerConfiguration.cs
+│
+├── Properties
+│
+├── appsettings.json
+├── appsettings.Development.json
+└── Program.cs
+
+BAŞLANGIÇTA BANA UYGUN GÖRÜLEN KLASÖR YAPISI.
+SmartOrderManagement
+│
+├── SmartOrderManagement.API
+│   ├── Controllers
+│   └── Program.cs
+│
+├── SmartOrderManagement.Application
+│   ├── Interfaces
+│   ├── Dtos
+│   ├── Services
+│   └── Mappings
+│
+├── SmartOrderManagement.Domain
+│   ├── Entities
+│   ├── Enums
+│   └── Common
+│
+└── SmartOrderManagement.Infrastructure
+    ├── Context
+    ├── Repositories
+    ├── Services
+    └── DependencyInjection

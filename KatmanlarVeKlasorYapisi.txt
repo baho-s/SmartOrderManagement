@@ -1,0 +1,157 @@
+﻿----------------------------------------------------------------------------
+1)DOMAİN KATMANI
+SmartOrderManagement.Domain (Sistemin kalbi, business kuralları burada)
+│
+├── Entities (Veritabanı tablolarının karşılığı + iş kuralları)
+│   ├── Order.cs
+│   ├── Product.cs
+│   └── Customer.cs
+│
+├── Common (Ortak base sınıflar - Id, CreatedDate vs.)
+│   ├── BaseEntity.cs
+│   └── AuditableEntity.cs
+│
+├── ValueObjects (Kimliği olmayan ama anlam taşıyan yapılar - Address, Money)
+│   ├── Address.cs
+│   └── Money.cs
+│
+├── Enums (Sabit değerler - OrderStatus, PaymentType)
+│   ├── OrderStatus.cs
+│   └── PaymentType.cs
+│
+├── Exceptions (Domain’e özel hatalar)
+│   └── DomainException.cs
+│
+└── Events (Domain event yapıları - OrderCreated vs.)
+    └── OrderCreatedEvent.cs
+----------------------------------------------------------------------------
+2)APPLİCATİON KATMANI
+SmartOrderManagement.Application (Use-case katmanı, işlemleri yönetir)
+│
+├── Interfaces (Infrastructure’ın implemente edeceği interface’ler)
+│   ├── Repositories (DB işlemleri için interface’ler)
+│   │   ├── IOrderRepository.cs
+│   │   ├── IProductRepository.cs
+│   │   └── ICustomerRepository.cs
+│   │
+│   └── Services (Mail, Token gibi servis interface’leri)
+│       ├── IEmailService.cs
+│       └── ITokenService.cs
+│
+├── Features (Her iş senaryosu burada tutulur - EN ÖNEMLİ)
+│   ├── Orders (Sipariş işlemleri)
+│   │   ├── Commands (Veri değiştiren işlemler - Create, Update, Delete)
+│   │   │   └── CreateOrder (Sipariş oluşturma işlemi)
+│   │   │       ├── CreateOrderCommand.cs
+│   │   │       ├── CreateOrderCommandHandler.cs
+│   │   │       └── CreateOrderCommandValidator.cs
+│   │   │
+│   │   ├── Queries (Veri okuma işlemleri - Get, List)
+│   │   │   └── GetOrderList
+│   │   │       ├── GetOrderListQuery.cs
+│   │   │       ├── GetOrderListQueryHandler.cs
+│   │   │       └── GetOrderListDto.cs
+│   │   │
+│   │   └── Dtos (API ile veri taşıma modelleri)
+│   │       ├── CreateOrderDto.cs
+│   │       └── ResultOrderDto.cs
+│   │
+│   ├── Products (Ürün işlemleri)
+│   └── Customers (Müşteri işlemleri)
+│
+├── Mappings (DTO ↔ Entity dönüşümleri - AutoMapper vs.)
+│   └── GeneralMapping.cs
+│
+├── Behaviors (Ortak işlemler - validation, logging, performance)
+│   ├── ValidationBehavior.cs
+│   └── LoggingBehavior.cs
+│
+├── Exceptions (Application seviyesinde hatalar)
+│   └── NotFoundException.cs
+│
+└── DependencyInjection (Servis kayıtları - AddScoped vs.)
+    └── ServiceRegistration.cs
+----------------------------------------------------------------------------
+3)INFRASTRUCTURE KATMANI
+SmartOrderManagement.Infrastructure (DB ve dış dünya ile iletişim katmanı)
+│
+├── Persistence (Veritabanı ile ilgili tüm işlemler)
+│   ├── Context (EF Core DbContext)
+│   │   └── AppDbContext.cs
+│   │
+│   ├── Repositories (Interface’lerin gerçek implementasyonu)
+│   │   ├── OrderRepository.cs
+│   │   ├── ProductRepository.cs
+│   │   └── CustomerRepository.cs
+│   │
+│   ├── Configurations (EF tablo/kolon ayarları - Fluent API)
+│   │   ├── OrderConfiguration.cs
+│   │   ├── ProductConfiguration.cs
+│   │   └── CustomerConfiguration.cs
+│   │
+│   └── Migrations (Veritabanı migration dosyaları)
+│
+├── Services (Mail, Token, File gibi teknik servisler)
+│   ├── EmailService.cs
+│   ├── TokenService.cs
+│   └── FileService.cs
+│
+├── Identity (JWT, authentication işlemleri)
+│   ├── JwtSettings.cs
+│   └── JwtHelper.cs
+│
+├── ExternalServices (Harici API servisleri - ödeme, sms vs.)
+│   ├── PaymentService.cs
+│   └── SmsService.cs
+│
+└── DependencyInjection (Infrastructure servis kayıtları)
+    └── ServiceRegistration.cs
+----------------------------------------------------------------------------
+4)API KATMANI
+SmartOrderManagement.API (Dış dünyaya açılan katman - HTTP isteklerini karşılar)
+│
+├── Controllers (HTTP isteklerini karşılar)
+│   ├── OrdersController.cs (GET /api/orders, POST /api/orders)
+│   ├── ProductsController.cs
+│   └── CustomersController.cs
+│
+├── Middlewares (Araya giren işlemler - hata yakalama, logging)
+│   └── ExceptionMiddleware.cs
+│
+├── Filters (Action öncesi/sonrası çalışan yapılar)
+│   └── ValidationFilter.cs
+│
+├── Extensions (Servis ve middleware ekleme kolaylığı)
+│   ├── ServiceCollectionExtensions.cs
+│   └── ApplicationBuilderExtensions.cs
+│
+├── Configurations (Swagger, CORS gibi ayarlar)
+│   └── SwaggerConfiguration.cs
+│
+├── appsettings.json (Bağlantı string ve config ayarları)
+├── appsettings.Development.json
+└── Program.cs (Uygulamanın başlangıç noktası)
+----------------------------------------------------------------------------
+BAŞLANGIÇTA BANA UYGUN GÖRÜLEN KLASÖR YAPISI.
+SmartOrderManagement
+│
+├── SmartOrderManagement.API
+│   ├── Controllers
+│   └── Program.cs
+│
+├── SmartOrderManagement.Application
+│   ├── Interfaces
+│   ├── Dtos
+│   ├── Services
+│   └── Mappings
+│
+├── SmartOrderManagement.Domain
+│   ├── Entities
+│   ├── Enums
+│   └── Common
+│
+└── SmartOrderManagement.Infrastructure
+    ├── Context
+    ├── Repositories
+    ├── Services
+    └── DependencyInjection

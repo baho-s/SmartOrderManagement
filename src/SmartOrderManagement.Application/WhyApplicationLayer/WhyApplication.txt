@@ -1,0 +1,126 @@
+﻿Application katmanı neden var? 
+---------------------------------------------------------
+Sistemin beyni(use-case katmanı), kullanıcın yapmak istediği 
+işlemleri organize eder. Business ile Infrastructure(DB vs.)
+arasında köprü görevi görür.
+---------------------------------------------------------
+Görevi nedir?
+
+1. Use Case’leri Yönetir (EN ÖNEMLİ)
+Yani sistemdeki senaryoları çalıştırır:
+Sipariş oluştur
+Ürün listele
+Kullanıcı giriş yap
+Rapor getir
+👉 Bunların hepsi Application katmanında yönetilir
+
+2. Business Kurallarını Çalıştırır (Ama yazmaz)
+⚠️ ÖNEMLİ
+Business katmanı → kuralı YAZAR
+Application katmanı → o kuralı ÇALIŞTIRIR
+
+3. Katmanlar Arası Köprüdür
+Şu iletişimi sağlar:
+API → Application → Domain/Business → Infrastructure (DB)
+👉 Yani API direkt DB’ye gitmez
+👉 Önce Application’a gelir
+
+4. DTO’ları Kullanır
+API’den gelen veri → DTO
+DB’ye giden veri → Entity
+👉 Dönüşümleri Application yapar
+
+5. Transaction / Akış Kontrolü
+Bir işlemde birden fazla adım varsa:
+Sipariş oluştur
+Stok düş
+Log kaydet
+👉 Bunları sırayla yönetir
+---------------------------------------------------------
+public class CreateOrderService
+{
+    private readonly IOrderRepository _orderRepository;
+
+    public CreateOrderService(IOrderRepository orderRepository)
+    {
+        _orderRepository = orderRepository;
+    }
+
+    public void Execute(CreateOrderDto dto)
+    {
+        // DTO → Entity dönüşümü
+        var order = new Order
+        {
+            ProductId = dto.ProductId,
+            Quantity = dto.Quantity
+        };
+
+        // Domain(Business) kuralı (örnek)(bunu yazmaması gerekir)
+        if (order.Quantity <= 0)
+            throw new Exception("Adet 0 olamaz");
+
+
+            // 🔥 KURALI ÇAĞIRIYOR (yazmıyor!)
+            order.CheckQuantity();
+
+        // DB işlemi
+        _orderRepository.Add(order);
+    }
+}
+
+API → Application → Domain → Infrastructure → Database
+---------------------------------------------------------
+KLASÖR YAPISI
+
+SmartOrderManagement.Application
+│
+├── Interfaces
+│   ├── Repositories
+│   │   ├── IOrderRepository.cs
+│   │   ├── IProductRepository.cs
+│   │   └── ICustomerRepository.cs
+│   │
+│   └── Services
+│       ├── IEmailService.cs
+│       └── ITokenService.cs
+│
+├── Features
+│   ├── Orders
+│   │   ├── Commands
+│   │   │   └── CreateOrder
+│   │   │       ├── CreateOrderCommand.cs
+│   │   │       ├── CreateOrderCommandHandler.cs
+│   │   │       └── CreateOrderCommandValidator.cs
+│   │   │
+│   │   ├── Queries
+│   │   │   └── GetOrderList
+│   │   │       ├── GetOrderListQuery.cs
+│   │   │       ├── GetOrderListQueryHandler.cs
+│   │   │       └── GetOrderListDto.cs
+│   │   │
+│   │   └── Dtos
+│   │       ├── CreateOrderDto.cs
+│   │       └── ResultOrderDto.cs
+│   │
+│   ├── Products
+│   │   ├── Commands
+│   │   ├── Queries
+│   │   └── Dtos
+│   │
+│   └── Customers
+│       ├── Commands
+│       ├── Queries
+│       └── Dtos
+│
+├── Mappings
+│   └── GeneralMapping.cs
+│
+├── Behaviors
+│   ├── ValidationBehavior.cs
+│   └── LoggingBehavior.cs
+│
+├── Exceptions
+│   └── NotFoundException.cs
+│
+└── DependencyInjection
+    └── ServiceRegistration.cs
