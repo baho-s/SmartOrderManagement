@@ -20,8 +20,8 @@ Layered architecture, SOLID prensipleri ve .NET backend geliştirmeyi öğrenmek
 ```
 SmartOrderManagement
 ├── SmartOrderManagement.API              → Presentation (Controllers, Middlewares)
-├── SmartOrderManagement.Application      → Business Logic (Services, Validators, DTOs)
-├── SmartOrderManagement.Domain           → Entities & Business Rules
+├── SmartOrderManagement.Application      → Business Logic (Services,Business Rules Validators, DTOs)
+├── SmartOrderManagement.Domain           → Entities 
 ├── SmartOrderManagement.Infrastructure   → Data Access (Repositories, DbContext)
 └── SmartOrderManagementNUnitTest         → Unit Tests
 ```
@@ -35,7 +35,7 @@ HTTP Request → [API Layer] → [Application] → [Infrastructure] → [Domain/
 |--------|-----------|
 | **API** | Controllers, Middlewares, Exception Handling |
 | **Application** | Services, DTOs, Validators, Mappings |
-| **Domain** | Entities, Business Rules, Enums |
+| **Domain** | Entities, Enums |
 | **Infrastructure** | Repositories, DbContext, Migrations |
 
 ## 🔧 Teknolojiler
