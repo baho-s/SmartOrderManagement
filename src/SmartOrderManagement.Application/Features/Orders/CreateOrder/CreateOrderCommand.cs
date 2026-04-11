@@ -9,6 +9,7 @@ namespace SmartOrderManagement.Application.Features.Orderds.CreateOrder
     {
         public int CustomerId { get; set; }
         public List<CreateOrderItemDto> CreateOrderItems { get; set; }
-        //Veri alırken CreateOrderItemDto üzerinden alıp,mapleme yaparak OrderItem nesnesine dönüştüreceğiz. Böylece sadece ihtiyacımız olan verileri alırız ve gereksiz verilerle uğraşmamış oluruz.
+        //Veri alırken CreateOrderItemDto üzerinden alıp,mapleme yaparak OrderItem nesnesine dönüştüreceğiz.
+        //Böylece sadece ihtiyacımız olan verileri alırız. Otomatik doldurulan property'leri dışardan almayız.
     }
 }

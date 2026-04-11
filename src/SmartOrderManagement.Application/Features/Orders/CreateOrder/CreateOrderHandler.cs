@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using SmartOrderManagement.Application.Exceptions;
 using SmartOrderManagement.Application.Interfaces.Repositories;
 using SmartOrderManagement.Application.Interfaces.UnitOfWork;
+using SmartOrderManagement.Application.Interfaces.Validators.OrderValidators;
 using SmartOrderManagement.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -20,19 +22,29 @@ namespace SmartOrderManagement.Application.Features.Orderds.CreateOrder
         private readonly IOrderRepository _orderRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public CreateOrderHandler(IProductRepository productRepository, IOrderRepository orderRepository, IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly ICreateOrderValidator _validator;
+        public CreateOrderHandler(IProductRepository productRepository, IOrderRepository orderRepository, IUnitOfWork unitOfWork, IMapper mapper, ICreateOrderValidator validator)
         {
             _productRepository = productRepository;
             _orderRepository = orderRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _validator = validator;
         }
         public async Task<int> Handle(CreateOrderCommand command)
-        {   
+        {
             // Command doğrulama (CreateOrderValidator ile)
             // İş kurallarını uygulama
             // Repository'ye sipariş ekleme
             // UnitOfWork ile işlemi tamamlama
+            //Gelen command'ı validator ile kontrol edicem.
+
+            var validationResult = await _validator.ValidateAsync(command);
+            if(!validationResult.IsValid)
+            {
+                throw new ValidationMyException("Validasyon hatası.");
+            }
+
             var order=_mapper.Map<Order>(command);
 
             foreach (var item in command.CreateOrderItems)

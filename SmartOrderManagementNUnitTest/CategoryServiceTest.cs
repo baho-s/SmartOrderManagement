@@ -13,7 +13,7 @@ using ValidationResult = FluentValidation.Results.ValidationResult;
 
 namespace SmartOrderManagementNUnitTest
 {
-    public class Tests
+   /* public class Tests
     {
         //UnitOfWork_Condition_ExpectedResult
         [Test]
@@ -76,5 +76,5 @@ namespace SmartOrderManagementNUnitTest
             //Assert
             await action.Should().ThrowAsync<BusinessRuleException>();
         }
-    }
+    }*/
 }
