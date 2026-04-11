@@ -20,7 +20,6 @@ namespace SmartOrderManagement.Infrastructure.Repositories
         public async Task AddAsync(Order order)
         {
             await _context.Orders.AddAsync(order);
-            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Order order)
@@ -37,7 +36,9 @@ namespace SmartOrderManagement.Infrastructure.Repositories
 
         public async Task<Order> GetByIdAsync(int id)
         {
-            var value=await _context.Orders.FindAsync(id);
+            var value=await _context.Orders
+                .Include(o=>o.OrderItems)
+                .FirstOrDefaultAsync(o=>o.OrderId==id);
             return value;
         }
 

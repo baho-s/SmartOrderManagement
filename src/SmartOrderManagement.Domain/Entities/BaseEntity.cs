@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SmartOrderManagement.Domain.Entities
 {
-    public abstract class BaseEntity
+    public class BaseEntity
     {
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }

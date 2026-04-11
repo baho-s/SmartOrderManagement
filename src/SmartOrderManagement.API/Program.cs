@@ -15,6 +15,11 @@ using SmartOrderManagement.Application.Interfaces.Validators.ProductValidators;
 using SmartOrderManagement.Application.Validators.ProductValidators;
 using SmartOrderManagement.Application.Interfaces.Validators.CustomerValidators;
 using SmartOrderManagement.Application.Validators.CustomerValidators;
+using SmartOrderManagement.Application.Interfaces.UnitOfWork;
+using SmartOrderManagement.Infrastructure.UnitOfWork;
+using SmartOrderManagement.Application.Features.Orderds.CreateOrder;
+using SmartOrderManagement.Application.Features.Orderds.UpdateOrderStatus;
+using SmartOrderManagement.Application.Features.Orderds.GetOrderById;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +55,12 @@ builder.Services.AddScoped<IUpdateProductValidator,UpdateProductValidator>();
 
 builder.Services.AddScoped<ICreateCustomerValidator, CreateCustomerValidator>();
 builder.Services.AddScoped<IUpdateCustomerValidator,UpdateCustomerValidator>();
+
+builder.Services.AddScoped<CreateOrderHandler>();
+builder.Services.AddScoped<UpdateOrderStatusHandler>();
+builder.Services.AddScoped<GetOrderByIdHandler>();
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
 

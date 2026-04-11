@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SmartOrderManagement.Application.DTOs.OrderDtos;
+using SmartOrderManagement.Application.Features.Orderds.CreateOrder;
+using SmartOrderManagement.Application.Features.Orderds.GetOrderById;
+using SmartOrderManagement.Application.Features.Orderds.UpdateOrderStatus;
 using SmartOrderManagement.Application.Interfaces.Services;
 
 namespace SmartOrderManagement.API.Controllers
@@ -10,23 +13,38 @@ namespace SmartOrderManagement.API.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly IOrderService _orderService;
+        private readonly CreateOrderHandler _createOrderHandler;
+        private readonly UpdateOrderStatusHandler _updateOrderStatusHandler;
+        private readonly GetOrderByIdHandler _getOrderByIdHandler;
 
-        public OrdersController(IOrderService orderService)
+        public OrdersController(IOrderService orderService, CreateOrderHandler createOrderHandler, UpdateOrderStatusHandler updateOrderStatusHandler, GetOrderByIdHandler getOrderByIdHandler)
         {
             _orderService = orderService;
+            _createOrderHandler = createOrderHandler;
+            _updateOrderStatusHandler = updateOrderStatusHandler;
+            _getOrderByIdHandler = getOrderByIdHandler;
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateOrder([FromBody] CreateOrderDto createOrderDto)
+        public async Task<IActionResult> CreateOrder([FromBody] CreateOrderCommand command)
         {
-            int orderId = await _orderService.CreateOrderAsync(createOrderDto);
+            int orderId = await _createOrderHandler.Handle(command);
             return CreatedAtAction(nameof(GetOrderById), new { id = orderId }, null);
+        }
+
+        [HttpPatch("{id}/status")]//=Patch=Kısmi güncelleme işlemi için kullanılır.
+        public async Task<IActionResult> UpdateOrderStatus(int id, [FromBody] UpdateOrderStatusCommand command)
+        {
+            command.OrderId = id; // ID'yi komut nesnesine atıyoruz//Çünkü URL'den gelen ID'yi kullanarak hangi siparişin durumunu güncelleyeceğimizi belirtiyoruz.
+            await _updateOrderStatusHandler.Handle(command);
+            return NoContent();
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetOrderById(int id)
         {
-            var order = await _orderService.GetByIdAsync(id);
+            var query = new GetOrderByIdQuery { OrderId = id }; 
+            var order = await _getOrderByIdHandler.Handle(query);
             return Ok(order);
         }
 

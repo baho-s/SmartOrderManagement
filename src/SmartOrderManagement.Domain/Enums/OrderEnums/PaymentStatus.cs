@@ -4,10 +4,10 @@ using System.Text;
 
 namespace SmartOrderManagement.Domain.Enums.OrderEnums
 {
-    public enum OrderStatus
+    public enum PaymentStatus
     {
-        Hazirlaniyor=0,
-        Tamamlandi=1,
-        Iptal=2
+        Pending,
+        Completed,
+        Failed
     }
 }

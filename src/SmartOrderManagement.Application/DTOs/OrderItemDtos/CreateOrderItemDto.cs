@@ -14,10 +14,6 @@ namespace SmartOrderManagement.Application.DTOs.OrderItemDtos
         // Ürünün sipariş anındaki birim fiyatı
         public decimal TotalPrice { get; set; }
         // Bu satırın toplam fiyatı (Quantity * UnitPrice)
-
-        public int OrderId { get; set; }
-        // Bu sipariş satırı hangi siparişe ait (Foreign Key)
-
         public int ProductId { get; set; }
         // Bu sipariş satırı hangi ürüne ait (Foreign Key)
     }

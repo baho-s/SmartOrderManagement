@@ -30,6 +30,12 @@ namespace SmartOrderManagement.API.Controllers
             return Ok(orderItem);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllOrderItems()
+        {
+            var orderItems = await _orderItemService.GetOrderItemsAsync();
+            return Ok(orderItems);
+        }
 
     }
 }

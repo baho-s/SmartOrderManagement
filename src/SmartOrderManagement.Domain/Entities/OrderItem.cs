@@ -12,7 +12,7 @@ namespace SmartOrderManagement.Domain.Entities
         // Bu üründen kaç adet sipariş verildi
         public decimal UnitPrice { get; set; }
         // Ürünün sipariş anındaki birim fiyatı
-        public decimal TotalPrice { get; set; }
+        public decimal TotalPrice { get; private set; }
         // Bu satırın toplam fiyatı (Quantity * UnitPrice)
 
         public int OrderId { get; set; }
@@ -25,5 +25,22 @@ namespace SmartOrderManagement.Domain.Entities
         public virtual Product Product { get; set; }=null!;
         // Bu sipariş satırının bağlı olduğu ürün
 
+        //EF Core için parametresiz constructor
+        protected OrderItem()
+        {
+            
+        }
+
+        public OrderItem(int productId, int quantity, decimal unitPrice)
+        {
+            if(quantity <= 0)
+            {
+                throw new ArgumentException("Miktar sıfırdan büyük olmalıdır.");
+            }
+            ProductId = productId;
+            Quantity = quantity;
+            UnitPrice = unitPrice;
+            TotalPrice = quantity * unitPrice;
+        }
     }
 }

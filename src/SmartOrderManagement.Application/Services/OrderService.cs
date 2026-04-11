@@ -13,20 +13,48 @@ namespace SmartOrderManagement.Application.Services
     public class OrderService : IOrderService
     {
         private readonly IOrderRepository _orderRepository;
+        private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
 
-        public OrderService(IOrderRepository orderRepository, IMapper mapper)
+        public OrderService(IOrderRepository orderRepository, IMapper mapper, IProductRepository productRepository)
         {
             _orderRepository = orderRepository;
             _mapper = mapper;
+            _productRepository = productRepository;
         }
 
-        public async Task<int> CreateOrderAsync(CreateOrderDto createOrderDto)
-        {
-            var value= _mapper.Map<Order>(createOrderDto);
-            await _orderRepository.AddAsync(value);
-            return value.OrderId;
-        }
+        /* public async Task<int> CreateOrderAsync(CreateOrderDto createOrderDto)
+         {
+
+
+             var order = _mapper.Map<Order>(createOrderDto);
+             order.TotalAmount = 0;           
+
+             if (createOrderDto.OrderItems != null)
+             {
+                 foreach (var itemDto in createOrderDto.OrderItems)
+                 {                    
+                     var product = await _productRepository.GetByIdAsync(itemDto.ProductId);
+                     if (product is null)
+                     {
+                         throw new NotFoundException($"Ürün Id'si {itemDto.ProductId} olan ürün bulunamadı.");
+                     }
+
+                     var orderItem = new OrderItem
+                     {
+                         ProductId = product.ProductId,
+                         Quantity = itemDto.Quantity,
+                         UnitPrice = product.ProductPrice,
+                         TotalPrice = product.ProductPrice * itemDto.Quantity
+                     };                   
+                     order.AddOrderItem(orderItem);
+
+                 }
+             }            
+
+             await _orderRepository.AddAsync(order);
+             return order.OrderId;
+         }*/
 
         public async Task DeleteOrderAsync(int id)
         {

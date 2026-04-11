@@ -1,4 +1,6 @@
-﻿using SmartOrderManagement.Domain.Enums.OrderEnums;
+﻿using SmartOrderManagement.Application.DTOs.OrderItemDtos;
+using SmartOrderManagement.Domain.Entities;
+using SmartOrderManagement.Domain.Enums.OrderEnums;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,7 +11,7 @@ namespace SmartOrderManagement.Application.DTOs.OrderDtos
     {
         public int OrderId { get; set; }
 
-        public DateTime OrderDate { get; set; } = DateTime.Now;
+        public DateTime OrderDate { get; set; }
         // Siparişin oluşturulduğu tarih
         public decimal TotalAmount { get; set; }
         // Siparişin toplam tutarı
@@ -20,5 +22,7 @@ namespace SmartOrderManagement.Application.DTOs.OrderDtos
 
         public int CustomerId { get; set; }
         // Bu sipariş hangi müşteriye ait (Foreign Key)
+
+        public List<OrderItemListDto> OrderItems { get; set; }
     }
 }
