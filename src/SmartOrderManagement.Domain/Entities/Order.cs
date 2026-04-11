@@ -10,6 +10,8 @@ namespace SmartOrderManagement.Domain.Entities
         
         public int OrderId { get; set; }
 
+        public string Address { get; private set; }
+
         public DateTime OrderDate { get; private set; }=DateTime.Now;
         // Siparişin oluşturulduğu tarih
         public decimal TotalAmount { get;private set; }
@@ -41,9 +43,10 @@ namespace SmartOrderManagement.Domain.Entities
             TotalAmount += item.TotalPrice;
         }
 
-        public Order(int customerId)
+        public Order(int customerId, string address)
         {
             CustomerId = customerId;
+            Address = address;
             Status = OrderStatus.Hazirlaniyor;
         }
         //Neden Constructor ile yapıyoruz? Çünkü Order oluşturulurken
@@ -57,24 +60,22 @@ namespace SmartOrderManagement.Domain.Entities
         // Status değiştirme methodları
         public void OrderStatusTamamlandi()
         {
-            if (Status != OrderStatus.Hazirlaniyor)
-                throw new Exception("Sipariş zaten hazırlanıyor!");//Kendi Exception'ımızı fırlatmak istersek Şuanda Applicationdaki BusinessRuleException'u buraya taşımalıyız.
-
+            if (Status == OrderStatus.Iptal)
+                throw new Exception("İptal edilen sipariş tamamlanamaz!");//Kendi Exception'ımızı fırlatmak istersek Şuanda Applicationdaki BusinessRuleException'u buraya taşımalıyız.
             Status = OrderStatus.Tamamlandi;
         }
 
         public void OrderStatusIptal()
         {
             if (Status == OrderStatus.Tamamlandi)
-                throw new Exception("Sipariş zaten tamamlandı!");//Kendi Exception'ımızı fırlatmak istersek Şuanda Applicationdaki BusinessRuleException'u buraya taşımalıyız.
+                throw new Exception("Sipariş zaten tamamlandı!");
             Status = OrderStatus.Iptal;
         }
-
 
         public void OdemeYap()
         {
             if(PaymentStatus)
-                throw new Exception("Ödeme zaten yapılmış!");//Kendi Exception'ımızı fırlatmak istersek Şuanda Applicationdaki BusinessRuleException'u buraya taşımalıyız.
+                throw new Exception("Ödeme zaten yapılmış!");
             PaymentStatus = true;
         }
 
@@ -86,6 +87,20 @@ namespace SmartOrderManagement.Domain.Entities
                 list.Add(item);
             }   
             return list;
+        }
+
+        public void UpdateOrderAddress(string newAddress)
+        {
+            if (string.IsNullOrWhiteSpace(newAddress))
+                throw new ArgumentException("Adres boş olamaz.");
+            Address = newAddress;
+        }
+
+        public void UpdateOrderTotalAmount(decimal newTotalAmount)
+        {
+            if (newTotalAmount < 0)
+                throw new ArgumentException("Toplam tutar negatif olamaz.");
+            TotalAmount = newTotalAmount;
         }
     }
 }

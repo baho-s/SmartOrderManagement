@@ -20,7 +20,10 @@ namespace SmartOrderManagement.Application.Features.Orderds.UpdateOrderStatus
 
         public async Task Handle(UpdateOrderStatusCommand command)
         {
-            //ŞUANLIK KOD YAZMA. BEN YAZACAĞIM.
+            if(command.OrderId<=0)
+            {
+                throw new Exception("Geçersiz sipariş ID'si");
+            }
             var order=await _orderRepository.GetByIdAsync(command.OrderId);
             if(order==null)
             {

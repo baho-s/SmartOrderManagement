@@ -11,6 +11,7 @@ namespace SmartOrderManagement.Application.DTOs.OrderDtos
     {
         public int OrderId { get; set; }
 
+        public string Address { get; set; }
         public DateTime OrderDate { get; set; }
         // Siparişin oluşturulduğu tarih
         public decimal TotalAmount { get; set; }

@@ -20,12 +20,20 @@ namespace SmartOrderManagement.Application.Features.Orderds.GetOrderById
 
         public async Task<OrderByIdDto> Handle(GetOrderByIdQuery query)
         {
+            if(query.OrderId<0)
+            {
+                throw new ValidationMyException("OrderId negatif olamaz.");
+            }
+
             var order = await _orderRepository.GetByIdAsync(query.OrderId);
+
             if (order == null)
             {
                 throw new NotFoundException($"Order id bulunamadı: {query.OrderId}");
             }
 
+
+            //Mapping elle yapıldı, Entity'deki değişiklik ve yeniliklere alışmak için elle mapliyorum.
             var orderItems = order.OrderItems.Select(oi => new OrderItemListDto
             {
                 OrderItemId = oi.OrderItemId,
@@ -42,7 +50,8 @@ namespace SmartOrderManagement.Application.Features.Orderds.GetOrderById
                 Status = order.Status,
                 PaymentStatus = order.PaymentStatus,
                 CustomerId = order.CustomerId,
-                OrderItems = orderItems
+                OrderItems = orderItems,
+                Address = order.Address
             };
             return orderByIdDto;
         }

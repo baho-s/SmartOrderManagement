@@ -22,6 +22,10 @@ using SmartOrderManagement.Application.Features.Orderds.UpdateOrderStatus;
 using SmartOrderManagement.Application.Features.Orderds.GetOrderById;
 using SmartOrderManagement.Application.Interfaces.Validators.OrderValidators;
 using SmartOrderManagement.Application.Validators.OrderValidators;
+using SmartOrderManagement.Application.Features.Orders.GetOrderList;
+using SmartOrderManagement.Application.Features.Orders.UpdateOrderAddress;
+using SmartOrderManagement.Application.Features.Orders.DeleteOrder;
+using SmartOrderManagement.Application.Features.Orders.UpdateOrderTotalAmount;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -63,6 +67,10 @@ builder.Services.AddScoped<ICreateOrderValidator, CreateOrderValidator>();
 builder.Services.AddScoped<CreateOrderHandler>();
 builder.Services.AddScoped<UpdateOrderStatusHandler>();
 builder.Services.AddScoped<GetOrderByIdHandler>();
+builder.Services.AddScoped<GetOrdersListQueryHandler>();
+builder.Services.AddScoped<UpdateOrderAddressCommandHandler>();
+builder.Services.AddScoped<UpdateOrderTotalAmountCommandHandler>();
+builder.Services.AddScoped<DeleteOrderCommandHandler>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 

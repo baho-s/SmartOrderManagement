@@ -18,7 +18,7 @@ namespace SmartOrderManagement.Application.Mappings
 
             CreateMap<CreateOrderCommand, Order>()
                 .ForMember(dest => dest.OrderItems, opt => opt.Ignore())
-                .ConstructUsing(src => new Order(src.CustomerId));
+                .ConstructUsing(src => new Order(src.CustomerId, src.Address));
             // Şunu yapar:
             // 1. new Order(command.CustomerId) ile oluştur
             // 2. Aynı isimli property'leri otomatik eşleştir

@@ -4,6 +4,10 @@ using SmartOrderManagement.Application.DTOs.OrderDtos;
 using SmartOrderManagement.Application.Features.Orderds.CreateOrder;
 using SmartOrderManagement.Application.Features.Orderds.GetOrderById;
 using SmartOrderManagement.Application.Features.Orderds.UpdateOrderStatus;
+using SmartOrderManagement.Application.Features.Orders.DeleteOrder;
+using SmartOrderManagement.Application.Features.Orders.GetOrderList;
+using SmartOrderManagement.Application.Features.Orders.UpdateOrderAddress;
+using SmartOrderManagement.Application.Features.Orders.UpdateOrderTotalAmount;
 using SmartOrderManagement.Application.Interfaces.Services;
 
 namespace SmartOrderManagement.API.Controllers
@@ -16,13 +20,21 @@ namespace SmartOrderManagement.API.Controllers
         private readonly CreateOrderHandler _createOrderHandler;
         private readonly UpdateOrderStatusHandler _updateOrderStatusHandler;
         private readonly GetOrderByIdHandler _getOrderByIdHandler;
+        private readonly GetOrdersListQueryHandler _getOrdersListQueryHandler;
+        private readonly UpdateOrderAddressCommandHandler _updateOrderAddressCommandHandler;
+        private readonly UpdateOrderTotalAmountCommandHandler _updateOrderTotalAmountCommandHandler;
+        private readonly DeleteOrderCommandHandler _deleteOrderCommandHandler;
 
-        public OrdersController(IOrderService orderService, CreateOrderHandler createOrderHandler, UpdateOrderStatusHandler updateOrderStatusHandler, GetOrderByIdHandler getOrderByIdHandler)
+        public OrdersController(IOrderService orderService, CreateOrderHandler createOrderHandler, UpdateOrderStatusHandler updateOrderStatusHandler, GetOrderByIdHandler getOrderByIdHandler, GetOrdersListQueryHandler getOrdersListQueryHandler, UpdateOrderAddressCommandHandler updateOrderAddressCommandHandler, UpdateOrderTotalAmountCommandHandler updateOrderTotalAmountCommandHandler, DeleteOrderCommandHandler deleteOrderCommandHandler)
         {
             _orderService = orderService;
             _createOrderHandler = createOrderHandler;
             _updateOrderStatusHandler = updateOrderStatusHandler;
             _getOrderByIdHandler = getOrderByIdHandler;
+            _getOrdersListQueryHandler = getOrdersListQueryHandler;
+            _updateOrderAddressCommandHandler = updateOrderAddressCommandHandler;
+            _updateOrderTotalAmountCommandHandler = updateOrderTotalAmountCommandHandler;
+            _deleteOrderCommandHandler = deleteOrderCommandHandler;
         }
 
         [HttpPost]
@@ -40,6 +52,23 @@ namespace SmartOrderManagement.API.Controllers
             return NoContent();
         }
 
+        [HttpPatch("{id}/address")]//=Patch=Kısmi güncelleme işlemi için kullanılır.
+        public async Task<IActionResult> UpdateOrderAddress(int id, [FromBody] UpdateOrderAddressCommand command)
+        {
+            command.OrderId = id; // ID'yi komut nesnesine atıyoruz//Çünkü URL'den gelen ID'yi kullanarak hangi siparişin adresini güncelleyeceğimizi belirtiyoruz.
+            await _updateOrderAddressCommandHandler.Handle(command);
+            return NoContent();
+        }
+
+        [HttpPatch("{id}/totalamount")]//=Patch=Kısmi güncelleme işlemi için kullanılır.
+        public async Task<IActionResult> UpdateOrderTotalAmount(int id, [FromBody] UpdateOrderTotalAmountCommand command)
+        {
+            //indirim kuponu sonrası toplam tutar güncellemesi gibi senaryolarda bu endpoint'i kullanabiliriz.
+            command.OrderId = id; // ID'yi komut nesnesine atıyoruz//Çünkü URL'den gelen ID'yi kullanarak hangi siparişin toplam tutarını güncelleyeceğimizi belirtiyoruz.
+            await _updateOrderTotalAmountCommandHandler.Handle(command);
+            return NoContent();
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetOrderById(int id)
         {
@@ -49,9 +78,9 @@ namespace SmartOrderManagement.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetOrders()
+        public async Task<IActionResult> GetOrders([FromQuery] GetOrdersListQuery query)
         {
-            var orders = await _orderService.GetAllAsync();
+            var orders = await _getOrdersListQueryHandler.Handle(query); //Örnek olarak sayfa numarası ve sayfa boyutu veriyoruz
             return Ok(orders);
         }
 
@@ -65,7 +94,8 @@ namespace SmartOrderManagement.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrder(int id)
         {
-            await _orderService.DeleteOrderAsync(id);
+            var command= new DeleteOrderCommand { OrderId = id };
+            await _deleteOrderCommandHandler.Handle(command);
             return NoContent();
         }
     }

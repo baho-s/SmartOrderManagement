@@ -2,9 +2,6 @@
 using SmartOrderManagement.Application.Interfaces.Repositories;
 using SmartOrderManagement.Domain.Entities;
 using SmartOrderManagement.Infrastructure.Context;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SmartOrderManagement.Infrastructure.Repositories
 {
@@ -34,18 +31,34 @@ namespace SmartOrderManagement.Infrastructure.Repositories
             return orders;
         }
 
-        public async Task<Order> GetByIdAsync(int id)
+        public async Task<Order?> GetByIdAsync(int id)
         {
-            var value=await _context.Orders
+            var order=await _context.Orders
                 .Include(o=>o.OrderItems)
                 .FirstOrDefaultAsync(o=>o.OrderId==id);
-            return value;
+            return order;
+        }
+
+        public IQueryable<Order> GetOrdersAsQueryable()
+        {
+            //Bu metod async olmak zorunda değil çünkü IQueryable döndük.
+            //Bu veritabanına sorgu atılmadı henüz.//Sorgu oluşturuldu ama çalıştırılmadı.
+            return _context.Orders.AsQueryable();
+        }
+
+        public async Task<List<Order>> GetOrdersListAsync(int page, int pageSize)
+        {
+            var orders=await _context.Orders
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Include(x=>x.OrderItems)
+                .ToListAsync();
+            return orders;
         }
 
         public async Task UpdateAsync(Order order)
         {
             _context.Orders.Update(order);
-            await _context.SaveChangesAsync();
         }
     }
 }
