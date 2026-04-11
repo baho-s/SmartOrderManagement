@@ -17,15 +17,15 @@ namespace SmartOrderManagement.API.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly IOrderService _orderService;
-        private readonly CreateOrderHandler _createOrderHandler;
-        private readonly UpdateOrderStatusHandler _updateOrderStatusHandler;
-        private readonly GetOrderByIdHandler _getOrderByIdHandler;
+        private readonly CreateOrderCommandHandler _createOrderHandler;
+        private readonly UpdateOrderStatusCommandHandler _updateOrderStatusHandler;
+        private readonly GetOrderByIdQueryHandler _getOrderByIdHandler;
         private readonly GetOrdersListQueryHandler _getOrdersListQueryHandler;
         private readonly UpdateOrderAddressCommandHandler _updateOrderAddressCommandHandler;
         private readonly UpdateOrderTotalAmountCommandHandler _updateOrderTotalAmountCommandHandler;
         private readonly DeleteOrderCommandHandler _deleteOrderCommandHandler;
 
-        public OrdersController(IOrderService orderService, CreateOrderHandler createOrderHandler, UpdateOrderStatusHandler updateOrderStatusHandler, GetOrderByIdHandler getOrderByIdHandler, GetOrdersListQueryHandler getOrdersListQueryHandler, UpdateOrderAddressCommandHandler updateOrderAddressCommandHandler, UpdateOrderTotalAmountCommandHandler updateOrderTotalAmountCommandHandler, DeleteOrderCommandHandler deleteOrderCommandHandler)
+        public OrdersController(IOrderService orderService, CreateOrderCommandHandler createOrderHandler, UpdateOrderStatusCommandHandler updateOrderStatusHandler, GetOrderByIdQueryHandler getOrderByIdHandler, GetOrdersListQueryHandler getOrdersListQueryHandler, UpdateOrderAddressCommandHandler updateOrderAddressCommandHandler, UpdateOrderTotalAmountCommandHandler updateOrderTotalAmountCommandHandler, DeleteOrderCommandHandler deleteOrderCommandHandler)
         {
             _orderService = orderService;
             _createOrderHandler = createOrderHandler;

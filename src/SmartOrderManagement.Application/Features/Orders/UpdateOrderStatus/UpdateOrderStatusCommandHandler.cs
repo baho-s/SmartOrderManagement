@@ -7,12 +7,12 @@ using System.Text;
 
 namespace SmartOrderManagement.Application.Features.Orderds.UpdateOrderStatus
 {
-    public class UpdateOrderStatusHandler
+    public class UpdateOrderStatusCommandHandler
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UpdateOrderStatusHandler(IUnitOfWork unitOfWork, IOrderRepository orderRepository)
+        public UpdateOrderStatusCommandHandler(IUnitOfWork unitOfWork, IOrderRepository orderRepository)
         {
             _unitOfWork = unitOfWork;
             _orderRepository = orderRepository;

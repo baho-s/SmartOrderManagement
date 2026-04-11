@@ -8,12 +8,12 @@ using SmartOrderManagement.Application.DTOs.OrderItemDtos;
 
 namespace SmartOrderManagement.Application.Features.Orderds.GetOrderById
 {
-    public class GetOrderByIdHandler
+    public class GetOrderByIdQueryHandler
     {
         private readonly IOrderRepository _orderRepository;
         
 
-        public GetOrderByIdHandler(IOrderRepository orderRepository)
+        public GetOrderByIdQueryHandler(IOrderRepository orderRepository)
         {
             _orderRepository = orderRepository;
         }

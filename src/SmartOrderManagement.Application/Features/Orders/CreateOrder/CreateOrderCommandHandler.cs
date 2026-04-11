@@ -16,14 +16,14 @@ namespace SmartOrderManagement.Application.Features.Orderds.CreateOrder
     //Repository'ye gönderir ve UnitOfWork ile işlemi tamamlar.
 
     //Handler DbContex,SQL,HTTP bilmez.
-    public class CreateOrderHandler
+    public class CreateOrderCommandHandler
     {
         private readonly IProductRepository _productRepository;
         private readonly IOrderRepository _orderRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ICreateOrderValidator _validator;
-        public CreateOrderHandler(IProductRepository productRepository, IOrderRepository orderRepository, IUnitOfWork unitOfWork, IMapper mapper, ICreateOrderValidator validator)
+        public CreateOrderCommandHandler(IProductRepository productRepository, IOrderRepository orderRepository, IUnitOfWork unitOfWork, IMapper mapper, ICreateOrderValidator validator)
         {
             _productRepository = productRepository;
             _orderRepository = orderRepository;
