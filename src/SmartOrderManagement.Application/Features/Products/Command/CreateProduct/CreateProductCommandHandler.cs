@@ -28,7 +28,7 @@ namespace SmartOrderManagement.Application.Features.Products.Command.CreateProdu
             var validationResult = await _createProductValidator.ValidateAsync(command);
             if (validationResult.IsValid)
             {
-                Product product = new Product(command.ProductName, command.ProductPrice, command.ProductStock, command.IsActive, command.CategoryId);
+                var product = new Product(command.ProductName, command.ProductPrice, command.ProductStock, command.IsActive, command.CategoryId);
                 await _productRepository.AddAsync(product);
                 await _unitOfWork.CommitAsync();
                 return product.ProductId;

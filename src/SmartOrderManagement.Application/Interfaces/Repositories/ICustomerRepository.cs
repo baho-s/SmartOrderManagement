@@ -5,10 +5,10 @@ namespace SmartOrderManagement.Application.Interfaces.Repositories
     public interface ICustomerRepository
     {
         Task AddAsync(Customer customer);
-        Task UpdateAsync(Customer customer);
-        Task DeleteAsync(Customer customer);
+        void Update(Customer customer);
+        void Delete(Customer customer);
         Task<Customer?> GetByIdAsync(int id);
 
-        Task<IEnumerable<Customer>> GetAllAsync();
+        Task<List<Customer>> GetAllAsync(int pageNumber, int pageSize);
     }
 }

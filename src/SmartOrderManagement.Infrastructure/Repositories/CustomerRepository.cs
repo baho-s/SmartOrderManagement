@@ -20,18 +20,19 @@ namespace SmartOrderManagement.Infrastructure.Repositories
         public async Task AddAsync(Customer customer)
         {
             await _context.AddAsync(customer);
-            await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(Customer customer)
+        public void Delete(Customer customer)
         {
             _context.Customers.Remove(customer);
-            await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Customer>> GetAllAsync()
+        public async Task<List<Customer>> GetAllAsync(int pageNumber, int pageSize)
         {
-            return await _context.Customers.ToListAsync();
+            return await _context.Customers
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
         }
 
         public async Task<Customer?> GetByIdAsync(int id)
@@ -40,10 +41,9 @@ namespace SmartOrderManagement.Infrastructure.Repositories
             return value;
         }
 
-        public async Task UpdateAsync(Customer customer)
+        public void Update(Customer customer)
         {
             _context.Customers.Update(customer);
-            await _context.SaveChangesAsync();
         }
     }
 }

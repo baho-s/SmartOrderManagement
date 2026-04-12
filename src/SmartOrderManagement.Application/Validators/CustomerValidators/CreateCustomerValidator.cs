@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using SmartOrderManagement.Application.DTOs.CustomerDtos;
+using SmartOrderManagement.Application.Features.Customers.Command.CreateCustomer;
 using SmartOrderManagement.Application.Interfaces.Validators.CustomerValidators;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Text;
 
 namespace SmartOrderManagement.Application.Validators.CustomerValidators
 {
-    public class CreateCustomerValidator:AbstractValidator<CreateCustomerDto>,ICreateCustomerValidator
+    public class CreateCustomerValidator:AbstractValidator<CreateCustomerCommand>,ICreateCustomerValidator
     {
         public CreateCustomerValidator()
         {

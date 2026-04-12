@@ -28,7 +28,7 @@ namespace SmartOrderManagement.Application.Services
             _updateCustomerValidator = updateCustomerValidator;
         }
 
-        public async Task<int> CreateCustomerAsync(CreateCustomerDto createCustomerDto)
+        /*public async Task<int> CreateCustomerAsync(CreateCustomerDto createCustomerDto)
         {
             var result= await _createCustomerValidator.ValidateAsync(createCustomerDto);
             if (!result.IsValid)
@@ -39,9 +39,9 @@ namespace SmartOrderManagement.Application.Services
             await _customerRepository.AddAsync(value);
             return value.CustomerId;
             
-        }
+        }*/
 
-        public async Task DeleteCustomerAsync(int id)
+        /*public async Task DeleteCustomerAsync(int id)
         {
             if(id <= 0)
             {
@@ -53,7 +53,7 @@ namespace SmartOrderManagement.Application.Services
                 throw new NotFoundException("Girilen Id'ye ait kullanıcı bulunamadı");
             }
             await _customerRepository.DeleteAsync(value);
-        }
+        }*/
 
         public async Task<CustomerByIdDto> GetByIdAsync(int id)
         {
@@ -69,13 +69,13 @@ namespace SmartOrderManagement.Application.Services
             return _mapper.Map<CustomerByIdDto>(value);
         }
 
-        public async Task<List<CustomerListDto>> GetCustomersAsync()
+        /*public async Task<List<CustomerListDto>> GetCustomersAsync()
         {
             var values=await _customerRepository.GetAllAsync();
             return _mapper.Map<List<CustomerListDto>>(values);
-        }
+        }*/
 
-        public async Task UpdateCustomerAsync(int id, UpdateCustomerDto updateCustomerDto)
+        /*public async Task UpdateCustomerAsync(int id, UpdateCustomerDto updateCustomerDto)
         {
             if (id == updateCustomerDto.CustomerId)
             {
@@ -88,6 +88,6 @@ namespace SmartOrderManagement.Application.Services
             }
             var value=_mapper.Map<Customer>(updateCustomerDto);
             await _customerRepository.UpdateAsync(value);
-        }
+        }*/
     }
 }
