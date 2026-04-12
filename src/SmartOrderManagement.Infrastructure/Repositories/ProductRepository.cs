@@ -20,32 +20,31 @@ namespace SmartOrderManagement.Infrastructure.Repositories
         public async Task AddAsync(Product product)
         {
             await _context.Products.AddAsync(product);
-            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Product product)
         {
             product.IsDeleted = true;
-            await _context.SaveChangesAsync();
         }
 
         public async Task<Product?> GetByIdAsync(int id)
         {
-            var value=await _context.Products.FindAsync(id);
+            var value=await _context.Products.Include(x=>x.Category).FirstOrDefaultAsync(x => x.ProductId == id);
             return value;
         }
 
-        public async Task<List<Product>> GetProductsAsync()
+        public async Task<List<Product>> GetProductsAsync(byte pageNumber, byte pageSize)
         {
             return await _context.Products
                 .Include(x=>x.Category)//CategoryName için gerekli.
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
         }
 
         public async Task UpdateAsync(Product product)
         {
             _context.Products.Update(product);
-            await _context.SaveChangesAsync();
         }
     }
 }

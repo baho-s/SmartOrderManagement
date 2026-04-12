@@ -8,10 +8,10 @@ namespace SmartOrderManagement.Application.Interfaces.Services
 {
     public interface IProductService
     {
-        Task<int> CreateProductAsync(CreateProductDto createProductDto);
+        //Task<int> CreateProductAsync(CreateProductDto createProductDto);
         Task UpdateProductAsync(int id,UpdateProductDto updateProductDto);
         Task DeleteProductAsync(int id);
-        Task<List<ProductListDto>> GetProductsAsync();
+        //Task<List<ProductListDto>> GetProductsAsync();
         Task<ProductByIdDto> GetByIdAsync(int id);
     }
 }

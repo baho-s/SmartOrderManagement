@@ -26,7 +26,7 @@ namespace SmartOrderManagement.Application.Services
             _categoryRepository = categoryRepository;
         }
 
-        public async Task<int> CreateProductAsync(CreateProductDto createProductDto)
+        /*public async Task<int> CreateProductAsync(CreateProductDto createProductDto)
         {
 
             var result=await _createProductValidator.ValidateAsync(createProductDto);
@@ -44,7 +44,7 @@ namespace SmartOrderManagement.Application.Services
             //createProductDto nesnesini Product nesnesine dönüştürür ve value değişkenine atar.
             await _productRepository.AddAsync(value);
             return value.ProductId;
-        }
+        }*/
 
         public async Task DeleteProductAsync(int id)
         {
@@ -67,12 +67,12 @@ namespace SmartOrderManagement.Application.Services
             return _mapper.Map<ProductByIdDto>(value);
         }
 
-        public async Task<List<ProductListDto>> GetProductsAsync()
+        /*public async Task<List<ProductListDto>> GetProductsAsync()
         {
             var values=await _productRepository.GetProductsAsync();
             return _mapper.Map<List<ProductListDto>>(values);
 
-        }
+        }*/
 
         public async Task UpdateProductAsync(int id,UpdateProductDto updateProductDto)
         {

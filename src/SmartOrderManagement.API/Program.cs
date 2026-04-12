@@ -17,15 +17,19 @@ using SmartOrderManagement.Application.Interfaces.Validators.CustomerValidators;
 using SmartOrderManagement.Application.Validators.CustomerValidators;
 using SmartOrderManagement.Application.Interfaces.UnitOfWork;
 using SmartOrderManagement.Infrastructure.UnitOfWork;
-using SmartOrderManagement.Application.Features.Orderds.CreateOrder;
-using SmartOrderManagement.Application.Features.Orderds.UpdateOrderStatus;
-using SmartOrderManagement.Application.Features.Orderds.GetOrderById;
 using SmartOrderManagement.Application.Interfaces.Validators.OrderValidators;
 using SmartOrderManagement.Application.Validators.OrderValidators;
-using SmartOrderManagement.Application.Features.Orders.GetOrderList;
-using SmartOrderManagement.Application.Features.Orders.UpdateOrderAddress;
-using SmartOrderManagement.Application.Features.Orders.DeleteOrder;
-using SmartOrderManagement.Application.Features.Orders.UpdateOrderTotalAmount;
+using SmartOrderManagement.Application.Features.Orders.Query.GetOrderList;
+using SmartOrderManagement.Application.Features.Orders.Query.GetOrderById;
+using SmartOrderManagement.Application.Features.Orders.Command.CreateOrder;
+using SmartOrderManagement.Application.Features.Orders.Command.UpdateOrderStatus;
+using SmartOrderManagement.Application.Features.Orders.Command.UpdateOrderAddress;
+using SmartOrderManagement.Application.Features.Orders.Command.DeleteOrder;
+using SmartOrderManagement.Application.Features.Orders.Command.UpdateOrderTotalAmount;
+using SmartOrderManagement.Application.Features.Products.Command.CreateProduct;
+using SmartOrderManagement.Application.Features.Products.Command.DeleteProduct;
+using SmartOrderManagement.Application.Features.Products.Command.UpdateProductIsActive;
+using SmartOrderManagement.Application.Features.Products.Command.UpdateProductCategoryId;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -64,13 +68,20 @@ builder.Services.AddScoped<IUpdateCustomerValidator,UpdateCustomerValidator>();
 
 builder.Services.AddScoped<ICreateOrderValidator, CreateOrderValidator>();
 
-builder.Services.AddScoped<CreateOrderHandler>();
-builder.Services.AddScoped<UpdateOrderStatusHandler>();
-builder.Services.AddScoped<GetOrderByIdHandler>();
+// Order ile ilgili command ve query handler'ları DI container'a ekliyoruz
+builder.Services.AddScoped<CreateOrderCommandHandler>();
+builder.Services.AddScoped<UpdateOrderStatusCommandHandler>();
+builder.Services.AddScoped<GetOrderByIdQueryHandler>();
 builder.Services.AddScoped<GetOrdersListQueryHandler>();
 builder.Services.AddScoped<UpdateOrderAddressCommandHandler>();
 builder.Services.AddScoped<UpdateOrderTotalAmountCommandHandler>();
 builder.Services.AddScoped<DeleteOrderCommandHandler>();
+
+//Product ile ilgili command handler'ları DI container'a ekliyoruz
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(CreateProductCommand).Assembly);
+});
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 

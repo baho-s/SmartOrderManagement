@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using SmartOrderManagement.Application.DTOs.OrderDtos;
-using SmartOrderManagement.Application.Features.Orderds.CreateOrder;
+using SmartOrderManagement.Application.Features.Orders.Command.CreateOrder;
 using SmartOrderManagement.Domain.Entities;
 using System;
 using System.Collections.Generic;

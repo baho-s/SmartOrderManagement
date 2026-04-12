@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SmartOrderManagement.Application.DTOs.OrderDtos;
-using SmartOrderManagement.Application.Features.Orderds.CreateOrder;
-using SmartOrderManagement.Application.Features.Orderds.GetOrderById;
-using SmartOrderManagement.Application.Features.Orderds.UpdateOrderStatus;
-using SmartOrderManagement.Application.Features.Orders.DeleteOrder;
-using SmartOrderManagement.Application.Features.Orders.GetOrderList;
-using SmartOrderManagement.Application.Features.Orders.UpdateOrderAddress;
-using SmartOrderManagement.Application.Features.Orders.UpdateOrderTotalAmount;
+using SmartOrderManagement.Application.Features.Orders.Command.CreateOrder;
+using SmartOrderManagement.Application.Features.Orders.Command.DeleteOrder;
+using SmartOrderManagement.Application.Features.Orders.Command.UpdateOrderAddress;
+using SmartOrderManagement.Application.Features.Orders.Command.UpdateOrderStatus;
+using SmartOrderManagement.Application.Features.Orders.Command.UpdateOrderTotalAmount;
+using SmartOrderManagement.Application.Features.Orders.Query.GetOrderById;
+using SmartOrderManagement.Application.Features.Orders.Query.GetOrderList;
 using SmartOrderManagement.Application.Interfaces.Services;
 
 namespace SmartOrderManagement.API.Controllers

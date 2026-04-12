@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using SmartOrderManagement.Application.Features.Orderds.CreateOrder;
+using SmartOrderManagement.Application.Features.Orders.Command.CreateOrder;
 using SmartOrderManagement.Application.Interfaces.Validators.OrderValidators;
 
 namespace SmartOrderManagement.Application.Validators.OrderValidators

@@ -13,5 +13,6 @@ namespace SmartOrderManagement.Application.DTOs.ProductDtos
         public bool IsActive { get; set; } = true;
         public int CategoryId { get; set; }
         // Bu ürün hangi kategoriye ait (Foreign Key)
+        public string CategoryName { get; set; }=string.Empty;
     }
 }
