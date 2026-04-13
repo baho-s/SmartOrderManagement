@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using SmartOrderManagement.Application.DTOs.CategoryDtos;
+using SmartOrderManagement.Application.Features.Categories.Command.CreateCategory;
 using SmartOrderManagement.Application.Interfaces.Validators.CategoryValidators;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Text;
 
 namespace SmartOrderManagement.Application.Validators.CategoryValidators
 {
-    public class CreateCategoryValidator:AbstractValidator<CreateCategoryDto>,ICreateCategoryValidator
+    public class CreateCategoryValidator:AbstractValidator<CreateCategoryCommand>,ICreateCategoryValidator
     {
         public CreateCategoryValidator()
         {

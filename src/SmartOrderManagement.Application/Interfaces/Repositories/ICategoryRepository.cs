@@ -10,7 +10,7 @@ namespace SmartOrderManagement.Application.Interfaces.Repositories
         // Bu yüzden dönüş tipi Category değil, Task<Category?> olur.
         Task<Category?> GetByIdAsync(int id);
         Task AddAsync(Category entity);
-        Task UpdateAsync(Category entity);
+        void Update(Category entity);
 
         // Bu metod silme işlemini yapacak.
         // Silme işleminin gerçek kısmı SaveChangesAsync ile DB'ye gideceği için
@@ -22,7 +22,7 @@ namespace SmartOrderManagement.Application.Interfaces.Repositories
         // DeleteRecursiveAsync ise gelen entity'i ve alt kategorilerini siler.//Alt kategorisi varsa ve silmek istiyorsak bu methodu kullanıcaz.
         Task DeleteRecursiveAsync(Category category);
 
-        Task TransferSubCategoriesAsync(Category category, int? newParentId);
+        //Task TransferSubCategoriesAsync(Category category, int? newParentId);
 
         Task<List<Category>> GetCategoriesAsync();
 

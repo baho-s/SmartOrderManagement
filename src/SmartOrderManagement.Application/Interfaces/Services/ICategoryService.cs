@@ -11,9 +11,9 @@ namespace SmartOrderManagement.Application.Interfaces.Services
 
         Task<ApiResponse<CategoryByIdDto>> GetByIdAsync(int id);
 
-        Task<CategoryDto> CreateCategoryAsync(CreateCategoryDto createCategoryDto);
+        //Task<CategoryDto> CreateCategoryAsync(CreateCategoryDto createCategoryDto);
 
-        Task UpdateCategoryAsync(int id,UpdateCategoryDto updateCategoryDto);
+        //Task UpdateCategoryAsync(int id,UpdateCategoryDto updateCategoryDto);
 
         Task<List<CategoryTreeDto>> GetCategoryTreeAsync();
 
@@ -21,7 +21,7 @@ namespace SmartOrderManagement.Application.Interfaces.Services
         // Controller bu metodu çağıracak.
         // İçeride repository'nin async metodlarını kullanacağımız için
         // service metodu da async akışa uygun olmalı.
-        Task DeleteCategoryAsync(int id,bool AltKategoriSil,int? newParentId);
+       // Task DeleteCategoryAsync(int id,bool AltKategoriSil,int? newParentId);
 
         Task<List<CategoryListDto>> GetAllAsync(GetCategoryQueryDto queryDto);
         // Tek tek page, pageSize göndermek yerine

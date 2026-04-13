@@ -29,7 +29,7 @@ namespace SmartOrderManagement.Application.Services
         }
 
         //Güncellendi
-        public async Task<CategoryDto> CreateCategoryAsync(CreateCategoryDto createCategoryDto)
+        /*public async Task<CategoryDto> CreateCategoryAsync(CreateCategoryDto createCategoryDto)
         {
 
             var result = await _createCategoryValidator.ValidateAsync(createCategoryDto);
@@ -81,9 +81,9 @@ namespace SmartOrderManagement.Application.Services
 
             return _mapper.Map<CategoryDto>(category);
             //Id ile dönüş yapıyoruz çünkü kaydetme işlemi sırasında entity'nin Id'si oluşur ve biz bunu geri dönmek isteriz.
-        }
+        }*/
 
-        public async Task DeleteCategoryAsync(int id, bool AltKategoriSil, int? newParentId)
+        /*public async Task DeleteCategoryAsync(int id, bool AltKategoriSil, int? newParentId)
         {
             var entity = await _categoryRepository.GetCategoryWithSubAsync(id);
 
@@ -130,7 +130,7 @@ namespace SmartOrderManagement.Application.Services
 
             // Sonra ana kategoriyi sil
             await _categoryRepository.DeleteAsync(entity);
-        }
+        }*/
 
 
 
@@ -173,7 +173,7 @@ namespace SmartOrderManagement.Application.Services
             return ApiResponse<CategoryByIdDto>.Succes(categoryByIdDto);
         }
 
-        public async Task UpdateCategoryAsync(int id, UpdateCategoryDto updateCategoryDto)
+       /* public async Task UpdateCategoryAsync(int id, UpdateCategoryDto updateCategoryDto)
         {
 
             // ID uyuşmazlığı kontrolü (çok önemli)
@@ -234,7 +234,7 @@ namespace SmartOrderManagement.Application.Services
 
             await _categoryRepository.UpdateAsync(category);
 
-        }
+        }*/
 
         public async Task<List<CategoryListDto>> GetAllAsync(GetCategoryQueryDto queryDto)
         {

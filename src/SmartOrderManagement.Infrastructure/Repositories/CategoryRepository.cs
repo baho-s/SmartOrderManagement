@@ -21,7 +21,6 @@ namespace SmartOrderManagement.Infrastructure.Repositories
         public async Task AddAsync(Category entity)
         {
             await _context.Categories.AddAsync(entity);
-            await _context.SaveChangesAsync();
         }
 
         //Alt Kategorisi yoksa bunu kullanarak silme işlemi yapabiliriz.
@@ -166,7 +165,7 @@ namespace SmartOrderManagement.Infrastructure.Repositories
             // Bu işlem IO (database) olduğu için zaman alabilir.
             // Bu yüzden async kullanıyoruz.
 
-            var values = await _context.Categories
+            var values = await _context.Categories.Where(c => !c.IsDeleted) // Silinmemiş kategorileri getir
                 .AsNoTracking() // performans için
                 .ToListAsync(); // DB'ye gider → await gerekir
 
@@ -255,16 +254,15 @@ namespace SmartOrderManagement.Infrastructure.Repositories
             }
         }
 
-        public async Task UpdateAsync(Category entity)
+        public void Update(Category entity)
         {
 
             //Update sadece işaretleme yapar
             //Veritabanına gitmez, RAM'de çalışır-->Bu yüzden await değil.
             _context.Categories.Update(entity);
-            await _context.SaveChangesAsync();
         }
 
-        public async Task TransferSubCategoriesAsync(Category category, int? newParentId)
+        /*public async Task TransferSubCategoriesAsync(Category category, int? newParentId)
         {
             await _context.Entry(category)
                 .Collection(c => c.SubCategories)
@@ -276,7 +274,7 @@ namespace SmartOrderManagement.Infrastructure.Repositories
             }
 
             await _context.SaveChangesAsync();
-        }
+        }*/
 
         public async Task<bool> ExistsAsync(int id)
         {
