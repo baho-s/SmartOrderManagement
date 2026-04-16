@@ -1,13 +1,14 @@
-﻿using SmartOrderManagement.Application.DTOs.OrderItemDtos;
+﻿using MediatR;
+using SmartOrderManagement.Application.DTOs.OrderItemDtos;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace SmartOrderManagement.Application.Features.Orders.Command.CreateOrder
 {
-    public record CreateOrderCommand
+    public record CreateOrderCommand:IRequest<int>
     {
-        public int CustomerId { get; init; }
+        //CustomerId'yi dışarıdan almayacağız,token'dan alacağız. O yüzden bu property'yi kaldırıyoruz.
         public string Address { get; init; } = string.Empty;
         public List<CreateOrderItemDto> CreateOrderItems { get; init; }
         //Veri alırken CreateOrderItemDto üzerinden alıp,mapleme yaparak OrderItem nesnesine dönüştüreceğiz.

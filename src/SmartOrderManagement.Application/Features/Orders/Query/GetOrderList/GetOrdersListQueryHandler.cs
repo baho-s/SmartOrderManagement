@@ -1,4 +1,5 @@
-﻿using SmartOrderManagement.Application.DTOs.OrderDtos;
+﻿using MediatR;
+using SmartOrderManagement.Application.DTOs.OrderDtos;
 using SmartOrderManagement.Application.DTOs.OrderItemDtos;
 using SmartOrderManagement.Application.Exceptions;
 using SmartOrderManagement.Application.Interfaces.Repositories;
@@ -8,7 +9,7 @@ using System.Text;
 
 namespace SmartOrderManagement.Application.Features.Orders.Query.GetOrderList
 {
-    public class GetOrdersListQueryHandler
+    public class GetOrdersListQueryHandler:IRequestHandler<GetOrdersListQuery,List<OrderListDto>>
     {
         private readonly IOrderRepository _orderRepository;
 
@@ -17,7 +18,7 @@ namespace SmartOrderManagement.Application.Features.Orders.Query.GetOrderList
             _orderRepository = orderRepository;
         }
 
-        public async Task<List<OrderListDto>> Handle(GetOrdersListQuery request)
+        public async Task<List<OrderListDto>> Handle(GetOrdersListQuery request,CancellationToken cancellationToken)
         {
             //ordersQuery=_context.Orders.AsQueryable();
             //ordersQuery üzerinde filtreleme, sıralama ve sayfalama

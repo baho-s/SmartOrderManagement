@@ -1,35 +1,30 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper;
-using SmartOrderManagement.API.Middlewares;
+using Microsoft.IdentityModel.Tokens;
+using SmartOrderManagement.Application.Features.Auth.Command.Login;
+using SmartOrderManagement.Application.Features.Auth.Command.Register;
+using SmartOrderManagement.Application.Features.Products.Command.CreateProduct;
 using SmartOrderManagement.Application.Interfaces.Repositories;
 using SmartOrderManagement.Application.Interfaces.Services;
+using SmartOrderManagement.Application.Interfaces.UnitOfWork;
+using SmartOrderManagement.Application.Interfaces.Validators.CategoryValidators;
+using SmartOrderManagement.Application.Interfaces.Validators.CustomerValidators;
+using SmartOrderManagement.Application.Interfaces.Validators.OrderValidators;
+using SmartOrderManagement.Application.Interfaces.Validators.ProductValidators;
+
 using SmartOrderManagement.Application.Mappings;
-using SmartOrderManagement.Application.Services;
 using SmartOrderManagement.Application.Validators.CategoryValidators;
+using SmartOrderManagement.Application.Validators.CustomerValidators;
+using SmartOrderManagement.Application.Validators.OrderValidators;
+using SmartOrderManagement.Application.Validators.ProductValidators;
 using SmartOrderManagement.Infrastructure.Context;
 using SmartOrderManagement.Infrastructure.Repositories;
-using System.Reflection;
-using SmartOrderManagement.Application.Interfaces.Validators.CategoryValidators;
-using SmartOrderManagement.Application.Interfaces.Validators.ProductValidators;
-using SmartOrderManagement.Application.Validators.ProductValidators;
-using SmartOrderManagement.Application.Interfaces.Validators.CustomerValidators;
-using SmartOrderManagement.Application.Validators.CustomerValidators;
-using SmartOrderManagement.Application.Interfaces.UnitOfWork;
+using SmartOrderManagement.Infrastructure.Services;
 using SmartOrderManagement.Infrastructure.UnitOfWork;
-using SmartOrderManagement.Application.Interfaces.Validators.OrderValidators;
-using SmartOrderManagement.Application.Validators.OrderValidators;
-using SmartOrderManagement.Application.Features.Orders.Query.GetOrderList;
-using SmartOrderManagement.Application.Features.Orders.Query.GetOrderById;
-using SmartOrderManagement.Application.Features.Orders.Command.CreateOrder;
-using SmartOrderManagement.Application.Features.Orders.Command.UpdateOrderStatus;
-using SmartOrderManagement.Application.Features.Orders.Command.UpdateOrderAddress;
-using SmartOrderManagement.Application.Features.Orders.Command.DeleteOrder;
-using SmartOrderManagement.Application.Features.Orders.Command.UpdateOrderTotalAmount;
-using SmartOrderManagement.Application.Features.Products.Command.CreateProduct;
-using SmartOrderManagement.Application.Features.Products.Command.DeleteProduct;
-using SmartOrderManagement.Application.Features.Products.Command.UpdateProductIsActive;
-using SmartOrderManagement.Application.Features.Products.Command.UpdateProductCategoryId;
+using Microsoft.OpenApi.Models;
+using System.Text;
+using SmartOrderManagement.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,20 +37,17 @@ builder.Services.AddAutoMapper(cfg =>
 });
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
 //“Bu interface istendiğinde, şu class’ı ver” dedik.
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<IProductService, ProductService>();
 
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
-builder.Services.AddScoped<ICustomerService, CustomerService>();
 
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
 builder.Services.AddScoped<IOrderItemService, OrderItemService>();
+
 
 builder.Services.AddScoped<ICreateCategoryValidator, CreateCategoryValidator>();
 builder.Services.AddScoped<IUpdateCategoryValidator, UpdateCategoryValidator>();
@@ -68,23 +60,63 @@ builder.Services.AddScoped<IUpdateCustomerValidator,UpdateCustomerValidator>();
 
 builder.Services.AddScoped<ICreateOrderValidator, CreateOrderValidator>();
 
-// Order ile ilgili command ve query handler'ları DI container'a ekliyoruz
-builder.Services.AddScoped<CreateOrderCommandHandler>();
-builder.Services.AddScoped<UpdateOrderStatusCommandHandler>();
-builder.Services.AddScoped<GetOrderByIdQueryHandler>();
-builder.Services.AddScoped<GetOrdersListQueryHandler>();
-builder.Services.AddScoped<UpdateOrderAddressCommandHandler>();
-builder.Services.AddScoped<UpdateOrderTotalAmountCommandHandler>();
-builder.Services.AddScoped<DeleteOrderCommandHandler>();
 
-//Product ile ilgili command handler'ları DI container'a ekliyoruz
+
+
+//MediatR ile bütün implement edilen sınıfların Assembly karşılıkları bulunup Regist ediliyor.
 builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssembly(typeof(CreateProductCommand).Assembly);
-});
+});//Eğer MediatR kullanmasaydık--> builder.Services.AddScoped<CreateOrderCommandHandler>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+// Auth ile ilgili servisler
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+
+builder.Services.AddHttpContextAccessor();
+// IHttpContextAccessor'ı DI container'a tanıttık
+// Artık Handler'lara inject edilebilir
+
+builder.Services.AddScoped<IAppUserRepository, AppUserRepository>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+
+// Auth Handler'ları
+builder.Services.AddScoped<RegisterCommandHandler>();
+builder.Services.AddScoped<LoginCommandHandler>();
+
+// JWT ayarlarını appsettings.json'dan okuyoruz
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    // Varsayılan authentication şeması JWT olacak
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        // Token'ı kimin oluşturduğunu doğrula
+
+        ValidateAudience = true,
+        // Token kimin için oluşturuldu doğrula
+
+        ValidateLifetime = true,
+        // Token süresi dolmuş mu doğrula
+
+        ValidateIssuerSigningKey = true,
+        // Token imzası geçerli mi doğrula
+
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+        // appsettings.json'daki değerlerle karşılaştır
+    };
+});
 
 
 
@@ -99,7 +131,42 @@ builder.Services.AddValidatorsFromAssemblyContaining<UpdateProductValidator>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "SmartOrderManagement API",
+        Version = "v1"
+    });
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Token giriniz. Bearer + Sadece token'ı yapıştırın,",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        // Http yerine ApiKey kullanıyoruz
+        Scheme = "Bearer"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                },
+                Scheme = "oauth2",
+                Name = "Bearer",
+                In = ParameterLocation.Header
+            },
+            new List<string>()
+        }
+    });
+});
 
 var app = builder.Build();
 
@@ -125,7 +192,12 @@ if (app.Environment.IsDevelopment())
 // Şimdilik kapalı kalsın
 // app.UseHttpsRedirection();
 
+//Giriş için--------------
+app.UseAuthentication();
+// Önce Authentication (kim bu kullanıcı?)
+
 app.UseAuthorization();
+// Sonra Authorization (bu kullanıcı ne yapabilir?)
 
 app.MapControllers();
 

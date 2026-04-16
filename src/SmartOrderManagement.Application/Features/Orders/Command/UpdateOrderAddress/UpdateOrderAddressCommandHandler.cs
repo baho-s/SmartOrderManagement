@@ -4,10 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using SmartOrderManagement.Application.Interfaces.UnitOfWork;
+using MediatR;
 
 namespace SmartOrderManagement.Application.Features.Orders.Command.UpdateOrderAddress
 {
-    public class UpdateOrderAddressCommandHandler
+    public class UpdateOrderAddressCommandHandler:IRequestHandler<UpdateOrderAddressCommand>
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IUnitOfWork _unitOfWork;
@@ -18,7 +19,7 @@ namespace SmartOrderManagement.Application.Features.Orders.Command.UpdateOrderAd
             _unitOfWork = unitOfWork;
         }
 
-        public async Task Handle(UpdateOrderAddressCommand command)
+        public async Task Handle(UpdateOrderAddressCommand command, CancellationToken cancellationToken)
         {
             if(command.OrderId<0)
             {
