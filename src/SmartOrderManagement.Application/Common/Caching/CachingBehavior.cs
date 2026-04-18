@@ -14,10 +14,12 @@ namespace SmartOrderManagement.Application.Common.Caching
     public class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
         private readonly IMemoryCache _cache;
+        private readonly ICacheKeyTracker _cacheKeyTracker;
 
-        public CachingBehavior(IMemoryCache cache)
+        public CachingBehavior(IMemoryCache cache, ICacheKeyTracker cacheKeyTracker)
         {
             _cache = cache;
+            _cacheKeyTracker = cacheKeyTracker;
         }
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
@@ -42,6 +44,7 @@ namespace SmartOrderManagement.Application.Common.Caching
             if(response is not null)
             {
                 _cache.Set(cacheKey, response,cacheableQuery.AbsoluteExpiration);
+                _cacheKeyTracker.AddCacheKey(cacheKey);
             }
                 
             return response;

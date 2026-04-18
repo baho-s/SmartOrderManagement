@@ -27,6 +27,7 @@ using System.Text;
 using SmartOrderManagement.Application.Services;
 using MediatR;
 using SmartOrderManagement.Application.Common.Caching;
+using SmartOrderManagement.Application.Interfaces.Caching;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -172,6 +173,8 @@ builder.Services.AddSwaggerGen(c =>
 //Cache için
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>));
+builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(CacheInvalidationBehavior<,>));
+builder.Services.AddScoped<ICacheKeyTracker, CacheKeyTracker>();
 
 var app = builder.Build();
 
