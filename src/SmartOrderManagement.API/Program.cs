@@ -64,7 +64,6 @@ builder.Services.AddScoped<ICreateOrderValidator, CreateOrderValidator>();
 
 
 
-
 //MediatR ile bütün implement edilen sınıfların Assembly karşılıkları bulunup Regist ediliyor.
 builder.Services.AddMediatR(cfg =>
 {
