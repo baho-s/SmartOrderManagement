@@ -30,20 +30,22 @@ namespace SmartOrderManagement.Application.Common.Caching
 
             var cacheKey = cacheableQuery.CacheKey;
 
-            if(_cache.TryGetValue(cacheKey,out TResponse cachedResponse))
+            if (_cache.TryGetValue(cacheKey, out TResponse cachedResponse))
             {
-                Console.WriteLine();
-                Console.WriteLine($"AAAAAAAAAAAAAA.Anahtara ait önbellek bulundu:.AAAAAAAAAAAAAAA {cacheKey}");
+                Console.WriteLine($"{DateTime.Now}Anahtara ait önbellek bulundu:.AAAAAAAAAAAAAAA {cacheKey}");
                 return cachedResponse;
             }
-            Console.WriteLine();
-            Console.WriteLine($"AAAAAAAAAAAAAAAAAAA.Anahtara ait önbellek bulunamadı:{cacheKey}. Veritabanından veri çekiliyor...AAAAAAAAAAAAAAAAAAAAAAA");
-            var response = await next();
-            Console.WriteLine();
-            //Veriyi önbelleğe ekliyoruz. AbsoluteExpiration, verinin ne kadar süreyle önbellekte kalacağını belirler.
-            _cache.Set(cacheKey, response, cacheableQuery.AbsoluteExpiration);
 
+            Console.WriteLine($"{DateTime.Now}.Anahtara ait önbellek bulunamadı:{cacheKey}. Veritabanından veri çekiliyor...AAAAAAAAAAAAAAAAAAAAAAA");
+
+            var response = await next();
+            if(response is not null)
+            {
+                _cache.Set(cacheKey, response,cacheableQuery.AbsoluteExpiration);
+            }
+                
             return response;
+
         }
     }
 }

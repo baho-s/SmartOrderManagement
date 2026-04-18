@@ -14,6 +14,6 @@ namespace SmartOrderManagement.Application.Features.Products.Query.GetProductLis
 
         public string CacheKey => $"products-{PageNumber}-{PageSize}";
 
-        public TimeSpan AbsoluteExpiration => TimeSpan.FromMinutes(10);
+        public TimeSpan AbsoluteExpiration => TimeSpan.FromSeconds(10);
     }
 }
