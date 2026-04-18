@@ -25,6 +25,8 @@ using SmartOrderManagement.Infrastructure.UnitOfWork;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using SmartOrderManagement.Application.Services;
+using MediatR;
+using SmartOrderManagement.Application.Common.Caching;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -167,6 +169,10 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+
+//Cache için
+builder.Services.AddMemoryCache();
+builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>));
 
 var app = builder.Build();
 
