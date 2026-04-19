@@ -46,6 +46,18 @@ namespace SmartOrderManagement.Infrastructure.Repositories
             return _context.Orders.AsQueryable();
         }
 
+        public async Task<List<Order>> GetOrdersByCustomerIdAsync(int customerId)
+        {
+            return await _context.Orders
+                    .Where(o => o.CustomerId == customerId)
+                    // Sadece o müşteriye ait siparişler
+                    .Include(o => o.OrderItems)
+                    // Sipariş kalemleri de gelsin
+                    .OrderByDescending(o => o.OrderDate)
+                    // En yeni sipariş en üstte
+                    .ToListAsync();
+        }
+
         public async Task<List<Order>> GetOrdersListAsync(int page, int pageSize)
         {
             var orders=await _context.Orders

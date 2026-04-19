@@ -31,8 +31,8 @@ namespace SmartOrderManagement.Application.Features.Products.Query.GetProductLis
 
             var productList = new List<ProductListDto>();
             var products = await _productRepository.GetProductsAsync(request.PageNumber, request.PageSize);
-            //Algoritma mantığını güçlendirmek için El ile maplemeye devam ediyoruz.
-            //AutoMapper'de de nasıl maplendiğine bakıyorum.
+            
+            
             foreach (var product in products)
             {
                 var productDto = new ProductListDto

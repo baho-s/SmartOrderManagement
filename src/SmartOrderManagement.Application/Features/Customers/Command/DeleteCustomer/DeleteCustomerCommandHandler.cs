@@ -26,7 +26,11 @@ namespace SmartOrderManagement.Application.Features.Customers.Command.DeleteCust
             {
                 throw new NotFoundException("Girilen Id'ye ait kullanıcı bulunamadı");
             }
-            _customerRepository.Delete(customer);
+            if(await _customerRepository.OrdersActive(customer))
+            {
+                throw new BusinessRuleException("Müşterinin aktif siparişleri var, müşteri silinemez");
+            }
+            customer.DeleteCustomer();
             await _unitOfWork.CommitAsync();
         }
     }

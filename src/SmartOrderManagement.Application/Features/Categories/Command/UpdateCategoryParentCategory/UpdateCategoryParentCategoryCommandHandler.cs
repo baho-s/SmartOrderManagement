@@ -27,7 +27,6 @@ namespace SmartOrderManagement.Application.Features.Categories.Command.UpdateCat
                 throw new Exception($"Bu Id'ye sahip kategori bulunamadı: {request.CategoryId}");
             }
             category.UpdateCategoryParentId(request.newParentCategoryId);
-            _categoryRepository.Update(category);
             await _unitOfWork.CommitAsync();
         }
     }

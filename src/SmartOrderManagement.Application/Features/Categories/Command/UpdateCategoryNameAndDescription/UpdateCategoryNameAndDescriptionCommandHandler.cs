@@ -31,7 +31,6 @@ namespace SmartOrderManagement.Application.Features.Categories.Command.UpdateCat
                 throw new NotFoundException($"Bu Id'ye ait Kategori bulunamadı: {request.CategoryId} ");
             }
             category.UpdateCategoryNameAndDescription(request.newCategoryName,request.newCategoryDescription);
-            _categoryRepository.Update(category);
             await _unitOfWork.CommitAsync();
         }
     }

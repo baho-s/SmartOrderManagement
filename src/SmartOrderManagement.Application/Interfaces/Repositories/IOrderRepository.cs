@@ -14,12 +14,12 @@ namespace SmartOrderManagement.Application.Interfaces.Repositories
         Task DeleteAsync(Order order);
 
         IQueryable<Order> GetOrdersAsQueryable();
-        Task<List<Order>> GetOrdersListAsync(int page, int pageSize);//IEnumerable nedir? 
-        //IEnumerable, bir koleksiyonun üzerinde sırayla dolaşmak için kullanılan bir arayüzdür. Bu arayüz, koleksiyonun elemanlarına erişim
-        //sağlar ancak koleksiyonun kendisini değiştirme yeteneği sunmaz. IEnumerable, genellikle LINQ sorguları ve foreach döngüleri
-        //gibi durumlarda kullanılır. IEnumerable, koleksiyonun elemanlarını tek tek işlemek için kullanılırken, List gibi
-        //koleksiyonlar ise elemanları ekleme, silme gibi işlemler yapabilir.,
+        Task<List<Order>> GetOrdersListAsync(int page, int pageSize);
 
-        //Kısaca, IEnumerable, koleksiyonun elemanlarına erişim sağlamak için kullanılırken, List gibi koleksiyonlar ise elemanları ekleme, silme gibi işlemler yapabilir.
+        Task<List<Order>> GetOrdersByCustomerIdAsync(int customerId);
+        // Token'dan gelen CustomerId ile
+        // sadece o müşteriye ait siparişleri getirecek
+
+
     }
 }

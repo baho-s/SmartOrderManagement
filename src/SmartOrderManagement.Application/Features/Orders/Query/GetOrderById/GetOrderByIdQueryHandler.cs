@@ -5,10 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using SmartOrderManagement.Application.DTOs.OrderItemDtos;
+using MediatR;
 
 namespace SmartOrderManagement.Application.Features.Orders.Query.GetOrderById
 {
-    public class GetOrderByIdQueryHandler
+    public class GetOrderByIdQueryHandler:IRequestHandler<GetOrderByIdQuery,OrderByIdDto>
     {
         private readonly IOrderRepository _orderRepository;
         
@@ -18,7 +19,7 @@ namespace SmartOrderManagement.Application.Features.Orders.Query.GetOrderById
             _orderRepository = orderRepository;
         }
 
-        public async Task<OrderByIdDto> Handle(GetOrderByIdQuery query)
+        public async Task<OrderByIdDto> Handle(GetOrderByIdQuery query,CancellationToken cancellationToken)
         {
             if(query.OrderId<0)
             {

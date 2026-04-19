@@ -60,7 +60,7 @@ namespace SmartOrderManagement.Infrastructure.Migrations
 
                     b.HasIndex("ParentCategoryId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("SmartOrderManagement.Domain.Entities.Customer", b =>
@@ -98,7 +98,7 @@ namespace SmartOrderManagement.Infrastructure.Migrations
 
                     b.HasKey("CustomerId");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("SmartOrderManagement.Domain.Entities.Order", b =>
@@ -141,7 +141,7 @@ namespace SmartOrderManagement.Infrastructure.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("SmartOrderManagement.Domain.Entities.OrderItem", b =>
@@ -182,7 +182,7 @@ namespace SmartOrderManagement.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("SmartOrderManagement.Domain.Entities.Product", b =>
@@ -222,7 +222,7 @@ namespace SmartOrderManagement.Infrastructure.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("SmartOrderManagement.Domain.Entities.Category", b =>
