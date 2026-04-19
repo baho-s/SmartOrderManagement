@@ -38,15 +38,31 @@ namespace SmartOrderManagement.Application.Common.Caching
                 return cachedResponse;
             }
 
-            Console.WriteLine($"{DateTime.Now}.Anahtara ait önbellek bulunamadı:{cacheKey}. Veritabanından veri çekiliyor...AAAAAAAAAAAAAAAAAAAAAAA");
+            Console.WriteLine($"{DateTime.Now}.Anahtara ait önbellek bulunamadı:{cacheKey}. Handler'a yönlendiriliyor.");
 
             var response = await next();
             if(response is not null)
             {
+                //1) Asıl response'u kendi key'i ile cache'e yaz.
+                //Örn: products-1-10 → List<ProductListDto>
                 _cache.Set(cacheKey, response,cacheableQuery.AbsoluteExpiration);
                 _cacheKeyTracker.AddCacheKey(cacheKey);
+
+                //2) Eğer bu request aynı zamanda ICacheSeedingQuery ise,
+                //OnCached metodunu çağır.
+                //Behavior burada ProductListDto'yu TANIMAZ.
+                //Sadece "sen seed yapabiliyorsan yap" der.
+                //Asıl seed mantığı Query sınıfının içindedir.
+                if (request is ICacheSeedingQuery<TResponse> seedingQuery)
+                {
+                    seedingQuery.OnCached(response, _cache, _cacheKeyTracker);
+                }
             }
-                
+            var allKeys= _cacheKeyTracker.GetKeys();
+            foreach (var key in allKeys)
+            {
+                Console.WriteLine($"Cache Key: {key}");
+            }
             return response;
 
         }

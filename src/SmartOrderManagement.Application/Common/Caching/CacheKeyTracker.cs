@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.AspNetCore.DataProtection.KeyManagement;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Win32;
 using SmartOrderManagement.Application.Interfaces.Caching;
 using System;
@@ -27,6 +28,7 @@ namespace SmartOrderManagement.Application.Common.Caching
                 cacheKeys.Add(cacheKey);
                 _cache.Set(CacheKeyRegistry, cacheKeys);
             }
+            Console.WriteLine($"Cache'te OnCached'den yeni oluşturulan key:{cacheKey}");
         }
 
         //Tüm key’leri getir

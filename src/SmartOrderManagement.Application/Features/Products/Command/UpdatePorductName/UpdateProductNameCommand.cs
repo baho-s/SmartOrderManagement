@@ -13,7 +13,7 @@ namespace SmartOrderManagement.Application.Features.Products.Command.UpdatePordu
 
         public List<string> CacheKeysToRemove => new()
         {
-            "products"
+            "product"
         };
     }
 }

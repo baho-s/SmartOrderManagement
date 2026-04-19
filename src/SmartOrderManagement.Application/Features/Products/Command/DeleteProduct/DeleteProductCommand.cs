@@ -1,11 +1,18 @@
-﻿using System;
+﻿using MediatR;
+using SmartOrderManagement.Application.Interfaces.Caching;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace SmartOrderManagement.Application.Features.Products.Command.DeleteProduct
 {
-    public record DeleteProductCommand
+    public record DeleteProductCommand: IRequest, ICacheInvalidator
     {
         public int ProductId { get; init; }
+
+        public List<string> CacheKeysToRemove => new()
+        {
+            "product"
+        };
     }
 }
