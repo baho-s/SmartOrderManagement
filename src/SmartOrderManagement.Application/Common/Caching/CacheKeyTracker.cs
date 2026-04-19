@@ -27,8 +27,9 @@ namespace SmartOrderManagement.Application.Common.Caching
             {
                 cacheKeys.Add(cacheKey);
                 _cache.Set(CacheKeyRegistry, cacheKeys);
+                Console.WriteLine($"Cache'te OnCached'den yeni oluşturulan key:{cacheKey}");
             }
-            Console.WriteLine($"Cache'te OnCached'den yeni oluşturulan key:{cacheKey}");
+            
         }
 
         //Tüm key’leri getir

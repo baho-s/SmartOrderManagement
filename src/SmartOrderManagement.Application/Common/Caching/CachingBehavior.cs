@@ -57,11 +57,9 @@ namespace SmartOrderManagement.Application.Common.Caching
                 {
                     seedingQuery.OnCached(response, _cache, _cacheKeyTracker);
                 }
-            }
-            var allKeys= _cacheKeyTracker.GetKeys();
-            foreach (var key in allKeys)
-            {
-                Console.WriteLine($"Cache Key: {key}");
+                // Toplam cache sayısını her yazma işleminden sonra bas
+                var total = _cacheKeyTracker.GetKeys().Count;
+                Console.WriteLine($"[Cache] Toplam kayıt: {total} | Son eklenen: {cacheKey}");
             }
             return response;
 
