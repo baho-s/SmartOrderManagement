@@ -22,7 +22,7 @@ namespace SmartOrderManagement.Application.Features.Products.Query.GetProductLis
         [BindNever]        
         public TimeSpan AbsoluteExpiration => TimeSpan.FromSeconds(240);
 
-        // 🆕 YENİ METOD
+        //YENİ METOD
         // CachingBehavior bu metodu çağırdığında "products-1-10" cache'e yazılmış demek.
         // Şimdi listedeki her ürünü ayrı ayrı product-{id} key'iyle de cache'e yazıyoruz.
         //
@@ -40,7 +40,7 @@ namespace SmartOrderManagement.Application.Features.Products.Query.GetProductLis
                 // ProductByIdDto oluşturuyoruz çünkü GetProductByIdQuery bu tipi bekliyor.
                 // Behavior ileride product-40 key'ine baktığında bunu bulacak ve
                 // doğrudan dönebilecek.
-                var dto = new ProductByIdDto
+                var dto = new 
                 {
                     ProductId = item.ProductId,
                     ProductName = item.ProductName,
