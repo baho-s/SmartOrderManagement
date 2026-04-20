@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using SmartOrderManagement.Application.DTOs.ProductDtos;
+using SmartOrderManagement.Application.Exceptions;
 using SmartOrderManagement.Application.Interfaces.Repositories;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,16 @@ namespace SmartOrderManagement.Application.Features.Products.Query.GetProductLis
         {
             var values = await _productRepository.GetProductListByIdCategory(request.CategoryId);
             
+            if(values.Count == 0)
+            {
+                throw new NotFoundException($"Bu Kategori Id'ye sahip kategori bulunamadı.{request.CategoryId}");
+            }
+
+            if (!values.Any())
+            {
+                throw new NotFoundException($"Bu Kategori Id'ye sahip ürün bulunamadı.{request.CategoryId}");
+            }
+
             return _mapper.Map<List<ProductListDto>>(values);
         }
     }

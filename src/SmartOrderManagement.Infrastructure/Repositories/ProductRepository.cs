@@ -33,7 +33,7 @@ namespace SmartOrderManagement.Infrastructure.Repositories
             return value;
         }
 
-        public async Task<List<Product>> GetProductListByIdCategory(int categoryId)
+        public async Task<List<Product>?> GetProductListByIdCategory(int categoryId)
         {
             return await _context.Products
                 .AsNoTracking()

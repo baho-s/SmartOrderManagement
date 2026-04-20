@@ -13,6 +13,6 @@ namespace SmartOrderManagement.Application.Interfaces.Repositories
         Task<List<Product>> GetProductsAsync(byte pageNumber, byte pageSize);
         Task<Product?> GetByIdAsync(int id);
 
-        Task<List<Product>> GetProductListByIdCategory(int categoryId);
+        Task<List<Product>?> GetProductListByIdCategory(int categoryId);
     }
 }
