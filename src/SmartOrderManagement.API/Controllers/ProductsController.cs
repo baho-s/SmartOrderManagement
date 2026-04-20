@@ -11,6 +11,7 @@ using SmartOrderManagement.Application.Features.Products.Command.UpdateProductCa
 using SmartOrderManagement.Application.Features.Products.Command.UpdateProductIsActive;
 using SmartOrderManagement.Application.Features.Products.Query.GetProductById;
 using SmartOrderManagement.Application.Features.Products.Query.GetProductList;
+using SmartOrderManagement.Application.Features.Products.Query.GetProductListByCategory;
 using SmartOrderManagement.Application.Interfaces.Services;
 
 namespace SmartOrderManagement.API.Controllers
@@ -91,5 +92,14 @@ namespace SmartOrderManagement.API.Controllers
             await _mediator.Send(command);
             return NoContent();
         }
+
+        [HttpGet("category/{categoryId}")]
+        public async Task<IActionResult> GetProductsByCategory(int categoryId)
+        {
+            var query = new GetProductListByCategoryQuery { CategoryId = categoryId };
+            var values = await _mediator.Send(query);
+            return Ok(values);
+        }
+
     }
 }

@@ -17,7 +17,7 @@ namespace SmartOrderManagement.Application.Features.Products.Command.CreateProdu
 
         public List<string> CacheKeysToRemove => new()
             {
-            "product"
+            $"product"
             };
         // Bu ürün hangi kategoriye ait (Foreign Key)
     }

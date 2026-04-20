@@ -12,5 +12,7 @@ namespace SmartOrderManagement.Application.Interfaces.Repositories
         Task DeleteAsync(Product product);
         Task<List<Product>> GetProductsAsync(byte pageNumber, byte pageSize);
         Task<Product?> GetByIdAsync(int id);
+
+        Task<List<Product>> GetProductListByIdCategory(int categoryId);
     }
 }

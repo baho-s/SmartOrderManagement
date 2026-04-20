@@ -33,6 +33,15 @@ namespace SmartOrderManagement.Infrastructure.Repositories
             return value;
         }
 
+        public async Task<List<Product>> GetProductListByIdCategory(int categoryId)
+        {
+            return await _context.Products
+                .AsNoTracking()
+                .Include(x => x.Category)
+                .Where(x => x.CategoryId == categoryId)
+                .ToListAsync();
+        }
+
         public async Task<List<Product>> GetProductsAsync(byte pageNumber, byte pageSize)
         {
             return await _context.Products
