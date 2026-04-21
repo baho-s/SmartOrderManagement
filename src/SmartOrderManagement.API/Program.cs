@@ -1,10 +1,15 @@
 ﻿using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using SmartOrderManagement.Application.Common.Caching;
+using SmartOrderManagement.Application.Common.Logging;
 using SmartOrderManagement.Application.Features.Auth.Command.Login;
 using SmartOrderManagement.Application.Features.Auth.Command.Register;
 using SmartOrderManagement.Application.Features.Products.Command.CreateProduct;
+using SmartOrderManagement.Application.Interfaces.Caching;
 using SmartOrderManagement.Application.Interfaces.Repositories;
 using SmartOrderManagement.Application.Interfaces.Services;
 using SmartOrderManagement.Application.Interfaces.UnitOfWork;
@@ -12,8 +17,8 @@ using SmartOrderManagement.Application.Interfaces.Validators.CategoryValidators;
 using SmartOrderManagement.Application.Interfaces.Validators.CustomerValidators;
 using SmartOrderManagement.Application.Interfaces.Validators.OrderValidators;
 using SmartOrderManagement.Application.Interfaces.Validators.ProductValidators;
-
 using SmartOrderManagement.Application.Mappings;
+using SmartOrderManagement.Application.Services;
 using SmartOrderManagement.Application.Validators.CategoryValidators;
 using SmartOrderManagement.Application.Validators.CustomerValidators;
 using SmartOrderManagement.Application.Validators.OrderValidators;
@@ -22,12 +27,7 @@ using SmartOrderManagement.Infrastructure.Context;
 using SmartOrderManagement.Infrastructure.Repositories;
 using SmartOrderManagement.Infrastructure.Services;
 using SmartOrderManagement.Infrastructure.UnitOfWork;
-using Microsoft.OpenApi.Models;
 using System.Text;
-using SmartOrderManagement.Application.Services;
-using MediatR;
-using SmartOrderManagement.Application.Common.Caching;
-using SmartOrderManagement.Application.Interfaces.Caching;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -171,6 +171,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 //Cache için
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>));
 builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(CacheInvalidationBehavior<,>));

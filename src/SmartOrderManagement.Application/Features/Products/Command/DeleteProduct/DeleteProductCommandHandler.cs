@@ -59,7 +59,6 @@ namespace SmartOrderManagement.Application.Features.Products.Command.DeleteProdu
                     {
                         _orderRepository.Delete(order);                        
                     }
-                    throw new Exception("Burada bir hata oluştuğunu varsayalım.");
                 }
 
                 // Ürünü sil
