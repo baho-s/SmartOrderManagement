@@ -22,7 +22,7 @@ namespace SmartOrderManagement.Infrastructure.Repositories
             await _context.Products.AddAsync(product);
         }
 
-        public async Task DeleteAsync(Product product)
+        public void Delete(Product product)
         {
             product.IsDeleted = true;
         }
@@ -54,6 +54,14 @@ namespace SmartOrderManagement.Infrastructure.Repositories
         public async Task UpdateAsync(Product product)
         {
             _context.Products.Update(product);
+        }
+
+
+        //Bunu Deniyeceğiz product silerken ona bağlı order var ise onuda sileceğiz.
+        public async Task<Product?> DeleteProductNew(int id)
+        {
+            var value = await _context.Products.Include(x=>x.OrderItems).ThenInclude(x=>x.Order).FirstOrDefaultAsync(x => x.ProductId == id);
+            return value;
         }
     }
 }

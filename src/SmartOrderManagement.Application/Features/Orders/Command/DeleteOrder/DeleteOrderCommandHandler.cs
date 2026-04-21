@@ -32,7 +32,7 @@ namespace SmartOrderManagement.Application.Features.Orders.Command.DeleteOrder
 
             if(order.Status==Domain.Enums.OrderEnums.OrderStatus.Iptal)
             {
-                await _orderRepository.DeleteAsync(order);
+                 _orderRepository.Delete(order);
                 await _unitOfWork.CommitAsync();
             }
             else

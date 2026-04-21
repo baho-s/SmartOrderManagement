@@ -35,7 +35,7 @@ namespace SmartOrderManagement.Application.Services
                 throw new NotFoundException($"Id pozitif olmalı.");
             }
             var value= await _orderItemRepository.GetByIdAsync(id);
-            await _orderItemRepository.DeleteAsync(value);
+            _orderItemRepository.Delete(value);
         }
 
         public async Task<OrderItemByIdDto> GetOrderItemByIdAsync(int id)

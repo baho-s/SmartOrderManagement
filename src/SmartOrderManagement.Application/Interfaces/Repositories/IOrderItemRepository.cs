@@ -11,6 +11,6 @@ namespace SmartOrderManagement.Application.Interfaces.Repositories
         Task<OrderItem> GetByIdAsync(int id);
         Task<IEnumerable<OrderItem>> GetAllAsync();
         Task UpdateAsync(OrderItem orderItem);
-        Task DeleteAsync(OrderItem orderItem);
+        void Delete(OrderItem orderItem);
     }
 }
