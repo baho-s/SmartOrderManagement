@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
+using Serilog.Events;
 using SmartOrderManagement.Application.Common.Caching;
 using SmartOrderManagement.Application.Common.Logging;
 using SmartOrderManagement.Application.Features.Auth.Command.Login;
@@ -30,6 +32,21 @@ using SmartOrderManagement.Infrastructure.UnitOfWork;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Serilog yapılandırması
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information() // Genel seviye
+    .WriteTo.Console() // Konsol için filtre yok, her şeyi yazar
+    .WriteTo.Logger(lc => lc
+        // Sadece 'LoggingBehavior' üzerinden gelen logları filtrele
+        .Filter.ByIncludingOnly("SourceContext like '%LoggingBehavior%'")
+        .WriteTo.File("logs/behavior-logs.txt", rollingInterval: RollingInterval.Day)
+    )
+    .CreateLogger();
+
+builder.Host.UseSerilog(); // Serilog'u uygulama host'una ekle
+
+
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

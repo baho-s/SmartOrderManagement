@@ -1,0 +1,2 @@
+2026-04-21 19:57:43.379 +03:00 [INF] İstek adı: GetProductListQuery işleniyor  Kimlik: "fa3ed468-751d-435a-b620-eb21551507a8"
+2026-04-21 19:57:45.324 +03:00 [INF] İstek adı: GetProductListQuery işlendi  Kimlik: "fa3ed468-751d-435a-b620-eb21551507a8" İşlem süresi: 1907 ms
