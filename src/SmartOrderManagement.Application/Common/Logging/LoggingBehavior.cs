@@ -20,7 +20,7 @@ namespace SmartOrderManagement.Application.Common.Logging
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             var requestName= typeof(TRequest).Name;
             var correlationId = Guid.NewGuid();
@@ -33,7 +33,7 @@ namespace SmartOrderManagement.Application.Common.Logging
 
             try
             {
-                var response = next();
+                var response = await next();
                 stopwatch.Stop();
 
                 _logger.LogInformation("İstek adı: {RequestName} işlendi  Kimlik: {CorrelationId} İşlem süresi: {ElapsedMilliseconds} ms", requestName, correlationId, stopwatch.ElapsedMilliseconds);
