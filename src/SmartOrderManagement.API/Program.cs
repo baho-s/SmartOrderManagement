@@ -40,7 +40,7 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Logger(lc => lc
         // Sadece 'LoggingBehavior' üzerinden gelen logları filtrele
         .Filter.ByIncludingOnly("SourceContext like '%LoggingBehavior%'")
-        .WriteTo.File("logs/behavior-logs.txt", rollingInterval: RollingInterval.Day)
+        .WriteTo.File("../../logs/behavior-logs.txt", rollingInterval: RollingInterval.Day)
     )
     .CreateLogger();
 
