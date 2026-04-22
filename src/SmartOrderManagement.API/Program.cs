@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using Serilog.Events;
 using SmartOrderManagement.Application.Common.Caching;
 using SmartOrderManagement.Application.Common.Logging;
 using SmartOrderManagement.Application.Features.Auth.Command.Login;
@@ -187,9 +186,20 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-//Cache için
+
+builder.Services.AddSingleton<ICacheService, RedisCacheService>();
+//Redis için gerekli servisleri ekliyoruz
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName = "SmartOrder_";
+});
+
+
+
+
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
-builder.Services.AddMemoryCache();
+
 builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>));
 builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(CacheInvalidationBehavior<,>));
 builder.Services.AddScoped<ICacheKeyTracker, CacheKeyTracker>();

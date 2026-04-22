@@ -1,11 +1,5 @@
 ﻿using MediatR;
-using Microsoft.Extensions.Caching.Memory;
 using SmartOrderManagement.Application.Interfaces.Caching;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmartOrderManagement.Application.Common.Caching
 {
@@ -13,10 +7,10 @@ namespace SmartOrderManagement.Application.Common.Caching
     //TResponse: İstek sonucunda dönecek yanıt türünü temsil eder.(Biz mesela burada ProductListDto gibi bir DTO döneceğiz.)
     public class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
-        private readonly IMemoryCache _cache;
+        private readonly ICacheService _cache;
         private readonly ICacheKeyTracker _cacheKeyTracker;
 
-        public CachingBehavior(IMemoryCache cache, ICacheKeyTracker cacheKeyTracker)
+        public CachingBehavior(ICacheService cache, ICacheKeyTracker cacheKeyTracker)
         {
             _cache = cache;
             _cacheKeyTracker = cacheKeyTracker;
@@ -31,11 +25,12 @@ namespace SmartOrderManagement.Application.Common.Caching
             }
 
             var cacheKey = cacheableQuery.CacheKey;
-
-            if (_cache.TryGetValue(cacheKey, out TResponse cachedResponse))
+            
+            var cached=await _cache.GetAsync<TResponse>(cacheKey, cancellationToken);
+            if (cached is not null)
             {
                 Console.WriteLine($"{DateTime.Now}Anahtara ait önbellek bulundu:.AAAAAAAAAAAAAAA {cacheKey}");
-                return cachedResponse;
+                return cached;
             }
 
             Console.WriteLine($"{DateTime.Now}.Anahtara ait önbellek bulunamadı:{cacheKey}. Handler'a yönlendiriliyor.");
@@ -45,8 +40,8 @@ namespace SmartOrderManagement.Application.Common.Caching
             {
                 //1) Asıl response'u kendi key'i ile cache'e yaz.
                 //Örn: products-1-10 → List<ProductListDto>
-                _cache.Set(cacheKey, response,cacheableQuery.AbsoluteExpiration);
-                _cacheKeyTracker.AddCacheKey(cacheKey);
+                await _cache.SetAsync(cacheKey, response, cacheableQuery.AbsoluteExpiration, cancellationToken);
+                await _cacheKeyTracker.AddCacheKeyAsync(cacheKey);
 
                 //2) Eğer bu request aynı zamanda ICacheSeedingQuery ise,
                 //OnCached metodunu çağır.
@@ -58,7 +53,7 @@ namespace SmartOrderManagement.Application.Common.Caching
                     seedingQuery.OnCached(response, _cache, _cacheKeyTracker);
                 }
                 // Toplam cache sayısını her yazma işleminden sonra bas
-                var total = _cacheKeyTracker.GetKeys().Count;
+                var total = (await _cacheKeyTracker.GetKeysAsync()).Count;
                 Console.WriteLine($"[Cache] Toplam kayıt: {total} | Son eklenen: {cacheKey}");
             }
             return response;

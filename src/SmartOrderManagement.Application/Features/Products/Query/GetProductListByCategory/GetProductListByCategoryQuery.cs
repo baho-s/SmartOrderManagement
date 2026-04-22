@@ -21,12 +21,12 @@ namespace SmartOrderManagement.Application.Features.Products.Query.GetProductLis
         //Aynı zamanda id'lerine göre ayırıp'ta listeleme yapıyoruz.
         //Bu cache'i biraz gereksiz şişirebilir ancak bu senaryo aklıma gelince nasıl yaparız diye düşünüp 
         //eklemek istedim. Mantığıda anlayabilmek için.
-        public void OnCached(List<ProductListDto> response, IMemoryCache cache, ICacheKeyTracker tracker)
+        public async Task OnCached(List<ProductListDto> response, ICacheService cache, ICacheKeyTracker tracker)
         {
             foreach (var product in response)
             {                
-                cache.Set($"product-{product.ProductId}", product, AbsoluteExpiration);
-                tracker.AddCacheKey($"product-{product.ProductId}");
+                await cache.SetAsync($"product-{product.ProductId}", product, AbsoluteExpiration);
+                await tracker.AddCacheKeyAsync($"product-{product.ProductId}");
             }
         }
     }

@@ -16,7 +16,7 @@ namespace SmartOrderManagement.Application.Features.Products.Query.GetProductByI
         private readonly IProductRepository _productRepository;
         
 
-        public GetProductByIdQueryHandler(IProductRepository productRepository, IMemoryCache cache, ICacheKeyTracker cacheKeyTracker)
+        public GetProductByIdQueryHandler(IProductRepository productRepository)
         {
             _productRepository = productRepository;
         }

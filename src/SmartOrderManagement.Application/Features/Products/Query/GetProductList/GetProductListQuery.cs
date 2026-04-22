@@ -29,7 +29,7 @@ namespace SmartOrderManagement.Application.Features.Products.Query.GetProductLis
         // Neden bu mantık Behavior'da değil burada?
         // Çünkü bu bir "Product davranışı". Yarın OrderListQuery gelirse
         // o kendi OnCached'ını yazar, Behavior'a dokunmadan.
-        public void OnCached(List<ProductListDto> response, IMemoryCache cache, ICacheKeyTracker tracker)
+        public async Task OnCached(List<ProductListDto> response, ICacheService cache, ICacheKeyTracker tracker)
         {
             foreach (var item in response)
             {
@@ -52,8 +52,8 @@ namespace SmartOrderManagement.Application.Features.Products.Query.GetProductLis
                 };
 
                 // Liste ile aynı süre geçerli olsun (240 sn).
-                cache.Set(cacheKey, dto, AbsoluteExpiration);
-                tracker.AddCacheKey(cacheKey);                
+                await cache.SetAsync(cacheKey, dto, AbsoluteExpiration);
+                await tracker.AddCacheKeyAsync(cacheKey);                
             }
         }
     }

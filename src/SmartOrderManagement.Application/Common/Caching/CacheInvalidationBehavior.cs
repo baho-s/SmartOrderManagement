@@ -28,7 +28,7 @@ namespace SmartOrderManagement.Application.Common.Caching
             {
                 foreach (var cacheKey in invalidator.CacheKeysToRemove)
                 {
-                    _cacheKeyTracker.RemoveByPrefix(cacheKey);
+                    await _cacheKeyTracker.RemoveByPrefixAsync(cacheKey);
                     Console.WriteLine($"CACHE Temizlendi → {cacheKey}");
                 }
             }

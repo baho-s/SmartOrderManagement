@@ -12,62 +12,62 @@ namespace SmartOrderManagement.Application.Common.Caching
 {
     public class CacheKeyTracker:ICacheKeyTracker
     {
-        private readonly IMemoryCache _cache;
+        private readonly ICacheService _cache;
         private const string CacheKeyRegistry = "DENEME_KEY_APP";
 
-        public CacheKeyTracker(IMemoryCache cache)
+        public CacheKeyTracker(ICacheService cache)
         {
             _cache = cache;
         }
 
-        public void AddCacheKey(string cacheKey)
+        public async Task AddCacheKeyAsync(string cacheKey)
         {
-            var cacheKeys = GetKeys(); 
+            var cacheKeys = await GetKeysAsync(); 
             if (!cacheKeys.Contains(cacheKey))
             {
                 cacheKeys.Add(cacheKey);
-                _cache.Set(CacheKeyRegistry, cacheKeys);
+                await _cache.SetAsync(CacheKeyRegistry, cacheKeys);
                 Console.WriteLine($"Cache'te OnCached'den yeni oluşturulan key:{cacheKey}");
             }
             
         }
 
         //Tüm key’leri getir
-        public List<string> GetKeys()
+        public async Task<List<string>> GetKeysAsync()
         {
-            return _cache.Get<List<string>>(CacheKeyRegistry) ?? new List<string>();
+            return await _cache.GetAsync<List<string>>(CacheKeyRegistry) ?? new List<string>();
         }
 
         //Hepsini temizle
-        public void RemoveAll()
+        public async Task RemoveAllAsync()
         {
-            var keys = GetKeys();
+            var keys = await GetKeysAsync();
 
             foreach (var key in keys)  
             {
-                _cache.Remove(key);
+                await _cache.RemoveAsync(key);
             }
 
             // listeyi de temizle
-            _cache.Remove(CacheKeyRegistry);
+            await _cache.RemoveAsync(CacheKeyRegistry);
         }
 
         //Bu key'i temizle
-        public void RemoveKey(string cacheKey)
+        public async Task RemoveKeyAsync(string cacheKey)
         {
-            _cache.Remove(cacheKey); // Fiziksel olarak cache'ten sil
+            await _cache.RemoveAsync(cacheKey); // Fiziksel olarak cache'ten sil
 
             // Defterden de bu ismi silelim
-            var keys = GetKeys();
+            var keys = await GetKeysAsync();
             if (keys.Remove(cacheKey))
             {                
-                _cache.Set(CacheKeyRegistry, keys);
+                await _cache.SetAsync(CacheKeyRegistry, keys);
             }
         }
 
-        public void RemoveByPrefix(string prefix)
+        public async Task RemoveByPrefixAsync(string prefix)
         {
-            var allKeys= GetKeys();
+            var allKeys= await GetKeysAsync();
 
             // 1. Silinecekleri belirle
             var keysToRemove = allKeys.Where(k => k.StartsWith(prefix)).ToList();
@@ -77,12 +77,12 @@ namespace SmartOrderManagement.Application.Common.Caching
             // 2. Fiziksel cache'leri temizle
             foreach (var key in keysToRemove)
             {
-                _cache.Remove(key);
+                await _cache.RemoveAsync(key);
                 allKeys.Remove(key); // Defterdeki listeden de uçur
             }
 
             // 3. EN ÖNEMLİSİ: Defteri tek seferde güncelle (Döngü bittikten sonra!)
-            _cache.Set(CacheKeyRegistry, allKeys);  
+            await _cache.SetAsync(CacheKeyRegistry, allKeys);  
         }
     }
 }

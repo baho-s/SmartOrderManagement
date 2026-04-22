@@ -10,7 +10,7 @@ namespace SmartOrderManagement.Application.Interfaces.Caching
     // Seeding destekleyen sorgular için ayrı arayüz
     public interface ICacheSeedingQuery<TResponse> : ICacheableQuery
     {
-        void OnCached(TResponse response, IMemoryCache cache, ICacheKeyTracker tracker);
+        Task OnCached(TResponse response, ICacheService cache, ICacheKeyTracker tracker);
 
     }
 }
