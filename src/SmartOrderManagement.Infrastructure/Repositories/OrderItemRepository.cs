@@ -23,10 +23,9 @@ namespace SmartOrderManagement.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(OrderItem orderItem)
+        public void Delete(OrderItem orderItem)
         {
-            _context.Remove(orderItem);
-            await _context.SaveChangesAsync();
+            orderItem.IsDeleted = true;
         }
 
         public async Task<IEnumerable<OrderItem>> GetAllAsync()

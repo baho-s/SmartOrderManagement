@@ -19,10 +19,9 @@ namespace SmartOrderManagement.Infrastructure.Repositories
             await _context.Orders.AddAsync(order);
         }
 
-        public async Task DeleteAsync(Order order)
+        public void Delete(Order order)
         {
             order.IsDeleted = true;
-            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Order>> GetAllAsync()
@@ -44,6 +43,18 @@ namespace SmartOrderManagement.Infrastructure.Repositories
             //Bu metod async olmak zorunda değil çünkü IQueryable döndük.
             //Bu veritabanına sorgu atılmadı henüz.//Sorgu oluşturuldu ama çalıştırılmadı.
             return _context.Orders.AsQueryable();
+        }
+
+        public async Task<List<Order>> GetOrdersByCustomerIdAsync(int customerId)
+        {
+            return await _context.Orders
+                    .Where(o => o.CustomerId == customerId)
+                    // Sadece o müşteriye ait siparişler
+                    .Include(o => o.OrderItems)
+                    // Sipariş kalemleri de gelsin
+                    .OrderByDescending(o => o.OrderDate)
+                    // En yeni sipariş en üstte
+                    .ToListAsync();
         }
 
         public async Task<List<Order>> GetOrdersListAsync(int page, int pageSize)

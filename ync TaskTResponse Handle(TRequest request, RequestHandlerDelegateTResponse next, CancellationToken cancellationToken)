@@ -1,0 +1,16 @@
+[33m1c87a9d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mrefactor/cqrs-and-auth-integration[m[33m)[m Cache denemeleri geri alındı ve güncel sürüme dönüldü.
+[33mb5e5cf7[m get/products endpoint' inin cache yapısı hazır hale geldi. Detaylandırılıp güncellenecek.
+[33m7a95eb7[m Cache işlemi için klasör yapısı oluşturuldu ve get/products endpoint'i için InMemory Caching başlangıcı yapıldı, ilk cache'den okuma çalışması.
+[33m8b30d96[m[33m ([m[1;31morigin/refactor/cqrs-and-auth-integration[m[33m)[m Readme Güncellendi.
+[33mf599d4e[m Mimari dönüşüm tamamlandı, Delete özellikleri ve handler yapıları eklendi
+[33m70e9ff3[m[33m ([m[1;31morigin/main[m[33m)[m refactor: Category entity CQRS ve DDD(Rich Domain Model) yapısına geçildi
+[33mb5c17c1[m refactor: Customer entity CQRS ve DDD (Rich Domain Model) yapısına geçirildi
+[33mcd232cb[m refactor: Product yapısını CQRS ve DDD yapısına geçirdim
+[33m3565d1b[m Merge branch 'main' of https://github.com/baho-s/SmartOrderManagement
+[33m22141fe[m Features/Orders/ Handler class isimleri düzenlendi.
+[33m2a0703d[m refacture: Order yönetim işlemleri ve sorgu yapıları tamamlandı
+[33m33c8eca[m refactore: Features/Orders/CreateOrder validsayon eklendi.
+[33m55008af[m refactor: refactor: sipariş işlemleri Handler yapısına taşınmaya başlandı ve Entity kapsülleme (encapsulation) kuralları(kısmen) uygulandı.
+[33m349179d[m Refine application and domain descriptions in README
+[33m83b5d09[m Mimari ve genel yapı oluşturuldu, başlangıç için CRUD yazıldı.
+[33m5b0e9c9[m initial commit clean structure

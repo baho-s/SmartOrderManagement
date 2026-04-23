@@ -15,6 +15,8 @@ namespace SmartOrderManagement.Infrastructure.Context
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Product> Products { get; set; }
 
+        public DbSet<AppUser> AppUsers { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -25,6 +27,20 @@ namespace SmartOrderManagement.Infrastructure.Context
             modelBuilder.Entity<Customer>().HasQueryFilter(cus => !cus.IsDeleted);
             modelBuilder.Entity<Order>().HasQueryFilter(o => !o.IsDeleted);
             modelBuilder.Entity<OrderItem>().HasQueryFilter(oi => !oi.IsDeleted);
+
+            // YENİ EKLENEN
+            modelBuilder.Entity<AppUser>().HasQueryFilter(u => !u.IsDeleted);
+            // Soft delete filter AppUser için de aktif
+
+            // AppUser - Customer 1-1 İlişkisi
+            modelBuilder.Entity<AppUser>()
+                .HasOne(u => u.Customer)
+                // AppUser'ın bir Customer'ı var
+                .WithOne()
+                // Customer tarafında navigation property YOK
+                // .WithOne(c => c.AppUser) yerine boş bıraktık 
+                .HasForeignKey<AppUser>(u => u.CustomerId);
+            // Foreign Key AppUser tarafında
         }
 
 

@@ -15,6 +15,8 @@ namespace SmartOrderManagement.Domain.Entities
 
         public virtual ICollection<Order> Orders { get; set; }=new HashSet<Order>();
         // Müşteri birden fazla sipariş verebilir
+
+
         public Customer(string fullName, string phone, string email, string address)
         {
             FullName = fullName;
@@ -37,6 +39,13 @@ namespace SmartOrderManagement.Domain.Entities
         public void UpdateCustomerFullName(string newFullName)
         {
             FullName = newFullName;
+        }
+
+        public void DeleteCustomer()
+        {            
+            // Müşteri silindiğinde ilişkili siparişler de silinir
+            IsDeleted = true;     
+            Orders.Clear();
         }
     }
 }

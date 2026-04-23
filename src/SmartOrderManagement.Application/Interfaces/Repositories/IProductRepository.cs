@@ -9,8 +9,12 @@ namespace SmartOrderManagement.Application.Interfaces.Repositories
     {
         Task AddAsync(Product product);
         Task UpdateAsync(Product product);
-        Task DeleteAsync(Product product);
+        void Delete(Product product);
         Task<List<Product>> GetProductsAsync(byte pageNumber, byte pageSize);
         Task<Product?> GetByIdAsync(int id);
+
+        Task<List<Product>?> GetProductListByIdCategory(int categoryId);
+
+        Task<Product?> DeleteProductNew(int id);
     }
 }

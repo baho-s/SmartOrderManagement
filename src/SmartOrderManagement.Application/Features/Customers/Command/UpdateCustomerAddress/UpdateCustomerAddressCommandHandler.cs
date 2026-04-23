@@ -27,7 +27,6 @@ namespace SmartOrderManagement.Application.Features.Customers.Command.UpdateCust
                 throw new NotFoundException($"Id'ye ait müşteri bulunamadı: {request.CustomerId}");
             }
             customer.UpdateCustomerAddress(request.NewAddress);
-            _customerRepository.Update(customer);
             await _unitOfWork.CommitAsync();
 
         }

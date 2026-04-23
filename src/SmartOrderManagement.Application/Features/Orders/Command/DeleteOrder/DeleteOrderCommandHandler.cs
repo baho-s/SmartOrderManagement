@@ -1,4 +1,5 @@
-﻿using SmartOrderManagement.Application.Interfaces.Repositories;
+﻿using MediatR;
+using SmartOrderManagement.Application.Interfaces.Repositories;
 using SmartOrderManagement.Application.Interfaces.UnitOfWork;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace SmartOrderManagement.Application.Features.Orders.Command.DeleteOrder
 {
-    public class DeleteOrderCommandHandler
+    public class DeleteOrderCommandHandler:IRequestHandler<DeleteOrderCommand>
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IUnitOfWork _unitOfWork;//readonly bir alanın birkez atanabileceğini ve birdaha değiştirilmeyeceğini belirtir.
@@ -17,7 +18,7 @@ namespace SmartOrderManagement.Application.Features.Orders.Command.DeleteOrder
             _unitOfWork = unitOfWork;
         }
 
-        public async Task Handle(DeleteOrderCommand command)
+        public async Task Handle(DeleteOrderCommand command,CancellationToken cancellationToken)
         {
             if (command.OrderId < 0)
             {
@@ -31,7 +32,7 @@ namespace SmartOrderManagement.Application.Features.Orders.Command.DeleteOrder
 
             if(order.Status==Domain.Enums.OrderEnums.OrderStatus.Iptal)
             {
-                await _orderRepository.DeleteAsync(order);
+                 _orderRepository.Delete(order);
                 await _unitOfWork.CommitAsync();
             }
             else

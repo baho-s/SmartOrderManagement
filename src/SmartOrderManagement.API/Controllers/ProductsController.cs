@@ -5,11 +5,14 @@ using SmartOrderManagement.Application.DTOs.ProductDtos;
 using SmartOrderManagement.Application.Features.Orders.Command.UpdateOrderStatus;
 using SmartOrderManagement.Application.Features.Products.Command.CreateProduct;
 using SmartOrderManagement.Application.Features.Products.Command.DeleteProduct;
+using SmartOrderManagement.Application.Features.Products.Command.UpdatePorductName;
 using SmartOrderManagement.Application.Features.Products.Command.UpdateProduct;
 using SmartOrderManagement.Application.Features.Products.Command.UpdateProductCategoryId;
 using SmartOrderManagement.Application.Features.Products.Command.UpdateProductIsActive;
+using SmartOrderManagement.Application.Features.Products.Command.UpdateProductStockAndPrice;
 using SmartOrderManagement.Application.Features.Products.Query.GetProductById;
 using SmartOrderManagement.Application.Features.Products.Query.GetProductList;
+using SmartOrderManagement.Application.Features.Products.Query.GetProductListByCategory;
 using SmartOrderManagement.Application.Interfaces.Services;
 
 namespace SmartOrderManagement.API.Controllers
@@ -18,14 +21,12 @@ namespace SmartOrderManagement.API.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly IProductService _productService;
         //private readonly CreateProductCommandHandler _createProductCommandHandler;
         //private readonly DeleteProductCommandHandler _deleteProductCommandHandler;
         private readonly IMediator _mediator;
 
-        public ProductsController(IProductService productService, IMediator mediator)
+        public ProductsController(IMediator mediator)
         {
-            _productService = productService;
             _mediator = mediator;
             //_createProductCommandHandler = createProductCommandHandler;
             //_deleteProductCommandHandler = deleteProductCommandHandler;
@@ -62,7 +63,7 @@ namespace SmartOrderManagement.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async  Task<IActionResult> UpdateProduct(int id,[FromBody]UpdateProductCommand command)
+        public async Task<IActionResult> UpdateProduct(int id, [FromBody] UpdateProductCommand command)
         {
             command.ProductId = id;
             await _mediator.Send(command);
@@ -79,6 +80,30 @@ namespace SmartOrderManagement.API.Controllers
 
         [HttpPatch("{id}/categoryId")]//=Patch=Kısmi güncelleme işlemi için kullanılır.
         public async Task<IActionResult> UpdateProductCategoryId(int id, [FromBody] UpdateProductCategoryIdCommand command)
+        {
+            command.ProductId = id; // ID'yi komut nesnesine atıyoruz//Çünkü URL'den gelen ID'yi kullanarak hangi ürünün durumunu güncelleyeceğimizi belirtiyoruz.
+            await _mediator.Send(command);
+            return NoContent();
+        }
+
+        [HttpPatch("{id}/productName")]
+        public async Task<IActionResult> UpdateProductName(int id, [FromBody] UpdateProductNameCommand command)
+        {
+            command.ProductId = id; // ID'yi komut nesnesine atıyoruz//Çünkü URL'den gelen ID'yi kullanarak hangi ürünün durumunu güncelleyeceğimizi belirtiyoruz.
+            await _mediator.Send(command);
+            return NoContent();
+        }
+
+        [HttpGet("category/{categoryId}")]
+        public async Task<IActionResult> GetProductsByCategory(int categoryId)
+        {
+            var query = new GetProductListByCategoryQuery { CategoryId = categoryId };
+            var values = await _mediator.Send(query);
+            return Ok(values);
+        }
+
+        [HttpPatch("{id}/price-stock")]
+        public async Task<IActionResult> UpdateProductStockAndPrice(int id, [FromBody] UpdateProductStockAndPriceCommand command)
         {
             command.ProductId = id; // ID'yi komut nesnesine atıyoruz//Çünkü URL'den gelen ID'yi kullanarak hangi ürünün durumunu güncelleyeceğimizi belirtiyoruz.
             await _mediator.Send(command);
