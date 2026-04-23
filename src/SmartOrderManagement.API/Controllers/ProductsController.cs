@@ -9,6 +9,7 @@ using SmartOrderManagement.Application.Features.Products.Command.UpdatePorductNa
 using SmartOrderManagement.Application.Features.Products.Command.UpdateProduct;
 using SmartOrderManagement.Application.Features.Products.Command.UpdateProductCategoryId;
 using SmartOrderManagement.Application.Features.Products.Command.UpdateProductIsActive;
+using SmartOrderManagement.Application.Features.Products.Command.UpdateProductStockAndPrice;
 using SmartOrderManagement.Application.Features.Products.Query.GetProductById;
 using SmartOrderManagement.Application.Features.Products.Query.GetProductList;
 using SmartOrderManagement.Application.Features.Products.Query.GetProductListByCategory;
@@ -101,5 +102,12 @@ namespace SmartOrderManagement.API.Controllers
             return Ok(values);
         }
 
+        [HttpPatch("{id}/price-stock")]
+        public async Task<IActionResult> UpdateProductStockAndPrice(int id, [FromBody] UpdateProductStockAndPriceCommand command)
+        {
+            command.ProductId = id; // ID'yi komut nesnesine atıyoruz//Çünkü URL'den gelen ID'yi kullanarak hangi ürünün durumunu güncelleyeceğimizi belirtiyoruz.
+            await _mediator.Send(command);
+            return NoContent();
+        }
     }
 }
