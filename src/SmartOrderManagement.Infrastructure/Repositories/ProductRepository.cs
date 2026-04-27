@@ -51,6 +51,12 @@ namespace SmartOrderManagement.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public async Task<List<Product>> GetProductsAsyncForRAG()
+        {
+            return await _context.Products.ToListAsync();
+                
+        }
+
         public async Task UpdateAsync(Product product)
         {
             _context.Products.Update(product);

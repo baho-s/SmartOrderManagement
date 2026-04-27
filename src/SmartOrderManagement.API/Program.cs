@@ -10,7 +10,9 @@ using SmartOrderManagement.Application.Common.Logging;
 using SmartOrderManagement.Application.Features.Auth.Command.Login;
 using SmartOrderManagement.Application.Features.Auth.Command.Register;
 using SmartOrderManagement.Application.Features.Products.Command.CreateProduct;
+using SmartOrderManagement.Application.Interfaces.AI;
 using SmartOrderManagement.Application.Interfaces.Caching;
+using SmartOrderManagement.Application.Interfaces.HuggingFace;
 using SmartOrderManagement.Application.Interfaces.Repositories;
 using SmartOrderManagement.Application.Interfaces.Services;
 using SmartOrderManagement.Application.Interfaces.UnitOfWork;
@@ -20,6 +22,7 @@ using SmartOrderManagement.Application.Interfaces.Validators.OrderValidators;
 using SmartOrderManagement.Application.Interfaces.Validators.ProductValidators;
 using SmartOrderManagement.Application.Mappings;
 using SmartOrderManagement.Application.Services;
+using SmartOrderManagement.Application.Services.AI;
 using SmartOrderManagement.Application.Validators.CategoryValidators;
 using SmartOrderManagement.Application.Validators.CustomerValidators;
 using SmartOrderManagement.Application.Validators.OrderValidators;
@@ -135,6 +138,13 @@ builder.Services.AddAuthentication(options =>
         // appsettings.json'daki değerlerle karşılaştır
     };
 });
+
+
+builder.Services.AddHttpClient(); // IHttpClientFactory için gerekli
+builder.Services.AddScoped<IHuggingFaceService, HuggingFaceService>();
+
+builder.Services.AddScoped<IRagService, RagService>();
+builder.Services.AddScoped<IHuggingFaceService, HuggingFaceService>();
 
 
 

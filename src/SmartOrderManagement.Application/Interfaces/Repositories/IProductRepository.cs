@@ -16,5 +16,7 @@ namespace SmartOrderManagement.Application.Interfaces.Repositories
         Task<List<Product>?> GetProductListByIdCategory(int categoryId);
 
         Task<Product?> DeleteProductNew(int id);
+
+        Task<List<Product>> GetProductsAsyncForRAG();
     }
 }
