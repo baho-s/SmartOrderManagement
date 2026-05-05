@@ -12,7 +12,8 @@ namespace SmartOrderManagement.Application.Features.Products.Command.DeleteProdu
 
         public List<string> CacheKeysToRemove => new()
         {
-            $"product-{ProductId}"
+            $"product-{ProductId}",
+            "product"
         };
     }
 }

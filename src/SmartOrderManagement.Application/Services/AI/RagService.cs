@@ -84,14 +84,7 @@ namespace SmartOrderManagement.Application.Services.AI
             return scored;
         }
 
-        // ========== PROMPT HAZIRLAMA FONKSİYONU ==========
-        /// <summary>
-        /// Bulunan belgeleri sorunun başına ekleyerek zenginleştirilmiş prompt oluşturur
-        /// Bu sayede LLM doğru bilgiye dayanarak daha iyi cevap verir
-        /// 
-        /// Klasik prompt: "İstanbul hakkında bilgi ver"
-        /// RAG prompt:   "Şu belgeler var: [belgeler]. Bunu kullanarak cevap ver"
-        /// </summary>
+        
         static string BuildAugmentedPrompt(string question, List<string> relevantDocs)
         {
             // Belgeleri numaralandırılmış formatta birleştir
