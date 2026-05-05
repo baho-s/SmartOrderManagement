@@ -16,9 +16,9 @@ namespace SmartOrderManagement.Application.Mappings
             //kaynak nesne nedir? Hangi nesneden veri alacağız?
             //hedef nesne nedir? Hangi nesneye veri aktaracağız?
 
-            CreateMap<CreateOrderCommand, Order>()
+            /*CreateMap<CreateOrderCommand, Order>()
                 .ForMember(dest => dest.OrderItems, opt => opt.Ignore())
-                .ConstructUsing(src => new Order(src.CustomerId, src.Address));
+                .ConstructUsing(src => new Order (src.Address));*/
             // Şunu yapar:
             // 1. new Order(command.CustomerId) ile oluştur
             // 2. Aynı isimli property'leri otomatik eşleştir

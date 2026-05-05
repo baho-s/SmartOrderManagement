@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartOrderManagement.Application.Interfaces.Repositories;
 using SmartOrderManagement.Domain.Entities;
+using SmartOrderManagement.Domain.Enums.OrderEnums;
 using SmartOrderManagement.Infrastructure.Context;
 using System;
 using System.Collections.Generic;
@@ -39,6 +40,16 @@ namespace SmartOrderManagement.Infrastructure.Repositories
         {
             var value = await _context.Customers.FindAsync(id);
             return value;
+        }
+
+        public async Task<bool> OrdersActive(Customer customer)
+        {
+            // Müşterinin aktif siparişleri var mı kontrolü eğer varsa true yoksa false döner
+            var active = await _context.Customers
+               .Where(c => c.CustomerId == customer.CustomerId)
+               .SelectMany(c => c.Orders)
+               .AnyAsync(o => o.Status == OrderStatus.Hazirlaniyor);
+            return active;
         }
 
         public void Update(Customer customer)

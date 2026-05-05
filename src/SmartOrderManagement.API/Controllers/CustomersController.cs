@@ -20,12 +20,10 @@ namespace SmartOrderManagement.API.Controllers
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        private readonly ICustomerService _customerService;
         private readonly IMediator _mediator;
 
-        public CustomersController(ICustomerService customerService, IMediator mediator)
+        public CustomersController(IMediator mediator)
         {
-            _customerService = customerService;
             _mediator = mediator;
         }
 

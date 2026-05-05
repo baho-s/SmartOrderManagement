@@ -1,11 +1,12 @@
-﻿using SmartOrderManagement.Domain.Enums.OrderEnums;
+﻿using MediatR;
+using SmartOrderManagement.Domain.Enums.OrderEnums;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace SmartOrderManagement.Application.Features.Orders.Command.UpdateOrderStatus
 {
-    public class UpdateOrderStatusCommand
+    public class UpdateOrderStatusCommand:IRequest
     {
         public int OrderId { get; set; }
         public OrderStatus NewStatus { get; init; }

@@ -34,9 +34,10 @@ namespace SmartOrderManagement.Domain.Entities
         // Bir kategori birçok ürüne sahip olabilir
         public virtual ICollection<Product> Products { get; private set; } = new HashSet<Product>();
 
+
         public Category()
         {
-            
+
         }
 
         public Category(string categoryName, string categoryDescription, string? imageUrl, bool isActive, int? parentCategoryId)
@@ -74,5 +75,16 @@ namespace SmartOrderManagement.Domain.Entities
             ParentCategoryId = newParentCategoryId;
         }
 
+        public void DeleteCategory()
+        {
+            IsDeleted = true;
+            IsActive = false;
+        }
+
+        public void MoveChildCategory(int newParentCategoryId)
+        {
+            ParentCategoryId = newParentCategoryId;
+        }
     }
+
 }

@@ -1,4 +1,5 @@
-﻿using SmartOrderManagement.Application.Interfaces.Repositories;
+﻿using MediatR;
+using SmartOrderManagement.Application.Interfaces.Repositories;
 using SmartOrderManagement.Application.Interfaces.UnitOfWork;
 using SmartOrderManagement.Domain.Enums.OrderEnums;
 using System;
@@ -7,7 +8,7 @@ using System.Text;
 
 namespace SmartOrderManagement.Application.Features.Orders.Command.UpdateOrderStatus
 {
-    public class UpdateOrderStatusCommandHandler
+    public class UpdateOrderStatusCommandHandler:IRequestHandler<UpdateOrderStatusCommand>
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IUnitOfWork _unitOfWork;
@@ -18,7 +19,7 @@ namespace SmartOrderManagement.Application.Features.Orders.Command.UpdateOrderSt
             _orderRepository = orderRepository;
         }
 
-        public async Task Handle(UpdateOrderStatusCommand command)
+        public async Task Handle(UpdateOrderStatusCommand command, CancellationToken cancellationToken)
         {
             if(command.OrderId<=0)
             {

@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SmartOrderManagement.Application.DTOs.OrderDtos;
 using SmartOrderManagement.Application.Features.Orders.Command.CreateOrder;
 using SmartOrderManagement.Application.Features.Orders.Command.DeleteOrder;
 using SmartOrderManagement.Application.Features.Orders.Command.UpdateOrderAddress;
 using SmartOrderManagement.Application.Features.Orders.Command.UpdateOrderStatus;
 using SmartOrderManagement.Application.Features.Orders.Command.UpdateOrderTotalAmount;
+using SmartOrderManagement.Application.Features.Orders.Query.GetMyOrders;
 using SmartOrderManagement.Application.Features.Orders.Query.GetOrderById;
 using SmartOrderManagement.Application.Features.Orders.Query.GetOrderList;
 using SmartOrderManagement.Application.Interfaces.Services;
@@ -16,56 +17,46 @@ namespace SmartOrderManagement.API.Controllers
     [ApiController]
     public class OrdersController : ControllerBase
     {
-        private readonly IOrderService _orderService;
-        private readonly CreateOrderCommandHandler _createOrderHandler;
-        private readonly UpdateOrderStatusCommandHandler _updateOrderStatusHandler;
-        private readonly GetOrderByIdQueryHandler _getOrderByIdHandler;
-        private readonly GetOrdersListQueryHandler _getOrdersListQueryHandler;
-        private readonly UpdateOrderAddressCommandHandler _updateOrderAddressCommandHandler;
-        private readonly UpdateOrderTotalAmountCommandHandler _updateOrderTotalAmountCommandHandler;
-        private readonly DeleteOrderCommandHandler _deleteOrderCommandHandler;
+        private readonly IMediator _mediator;        
 
-        public OrdersController(IOrderService orderService, CreateOrderCommandHandler createOrderHandler, UpdateOrderStatusCommandHandler updateOrderStatusHandler, GetOrderByIdQueryHandler getOrderByIdHandler, GetOrdersListQueryHandler getOrdersListQueryHandler, UpdateOrderAddressCommandHandler updateOrderAddressCommandHandler, UpdateOrderTotalAmountCommandHandler updateOrderTotalAmountCommandHandler, DeleteOrderCommandHandler deleteOrderCommandHandler)
+        public OrdersController(IMediator mediator)
         {
-            _orderService = orderService;
-            _createOrderHandler = createOrderHandler;
-            _updateOrderStatusHandler = updateOrderStatusHandler;
-            _getOrderByIdHandler = getOrderByIdHandler;
-            _getOrdersListQueryHandler = getOrdersListQueryHandler;
-            _updateOrderAddressCommandHandler = updateOrderAddressCommandHandler;
-            _updateOrderTotalAmountCommandHandler = updateOrderTotalAmountCommandHandler;
-            _deleteOrderCommandHandler = deleteOrderCommandHandler;
+            _mediator = mediator;
         }
 
         [HttpPost]
+        [Authorize]
+        // Sadece giriş yapmış kullanıcılar sipariş verebilir
+        // Token olmadan istek gelirse 401 döner
         public async Task<IActionResult> CreateOrder([FromBody] CreateOrderCommand command)
         {
-            int orderId = await _createOrderHandler.Handle(command);
+            int orderId = await _mediator.Send(command);
             return CreatedAtAction(nameof(GetOrderById), new { id = orderId }, null);
+            
         }
 
-        [HttpPatch("{id}/status")]//=Patch=Kısmi güncelleme işlemi için kullanılır.
+        [HttpPatch("{id}/status")]
         public async Task<IActionResult> UpdateOrderStatus(int id, [FromBody] UpdateOrderStatusCommand command)
         {
-            command.OrderId = id; // ID'yi komut nesnesine atıyoruz//Çünkü URL'den gelen ID'yi kullanarak hangi siparişin durumunu güncelleyeceğimizi belirtiyoruz.
-            await _updateOrderStatusHandler.Handle(command);
+            command.OrderId = id; 
+            await _mediator.Send(command);
             return NoContent();
         }
 
-        [HttpPatch("{id}/address")]//=Patch=Kısmi güncelleme işlemi için kullanılır.
+        [HttpPatch("{id}/address")]
         public async Task<IActionResult> UpdateOrderAddress(int id, [FromBody] UpdateOrderAddressCommand command)
         {
-            command.OrderId = id; // ID'yi komut nesnesine atıyoruz//Çünkü URL'den gelen ID'yi kullanarak hangi siparişin adresini güncelleyeceğimizi belirtiyoruz.
-            await _updateOrderAddressCommandHandler.Handle(command);
+            command.OrderId = id; 
+            await _mediator.Send(command);
             return NoContent();
         }
 
-        [HttpPatch("{id}/totalamount")]//=Patch=Kısmi güncelleme işlemi için kullanılır.
+        [HttpPatch("{id}/totalamount")]
         public async Task<IActionResult> UpdateOrderTotalAmount(int id, [FromBody] UpdateOrderTotalAmountCommand command)
         {
             //indirim kuponu sonrası toplam tutar güncellemesi gibi senaryolarda bu endpoint'i kullanabiliriz.
-            command.OrderId = id; // ID'yi komut nesnesine atıyoruz//Çünkü URL'den gelen ID'yi kullanarak hangi siparişin toplam tutarını güncelleyeceğimizi belirtiyoruz.
-            await _updateOrderTotalAmountCommandHandler.Handle(command);
+            command.OrderId = id;
+            await _mediator.Send(command);
             return NoContent();
         }
 
@@ -73,30 +64,32 @@ namespace SmartOrderManagement.API.Controllers
         public async Task<IActionResult> GetOrderById(int id)
         {
             var query = new GetOrderByIdQuery { OrderId = id }; 
-            var order = await _getOrderByIdHandler.Handle(query);
+            var order = await _mediator.Send(query);
             return Ok(order);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetOrders([FromQuery] GetOrdersListQuery query)
         {
-            var orders = await _getOrdersListQueryHandler.Handle(query); //Örnek olarak sayfa numarası ve sayfa boyutu veriyoruz
+            var orders = await _mediator.Send(query);
             return Ok(orders);
         }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateOrder(int id, [FromBody] UpdateOrderDto updateOrderDto)
-        {
-            await _orderService.UpdateOrderAsync(id, updateOrderDto);
-            return NoContent();
-        }
+        
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrder(int id)
         {
             var command= new DeleteOrderCommand { OrderId = id };
-            await _deleteOrderCommandHandler.Handle(command);
+            await _mediator.Send(command);
             return NoContent();
+        }
+
+        [HttpGet("my-orders")]
+        [Authorize]        
+        public async Task<IActionResult> GetMyOrders()
+        {
+            var orders = await _mediator.Send(new GetMyOrdersQuery());
+            return Ok(orders);
         }
     }
 }

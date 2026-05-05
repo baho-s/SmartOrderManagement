@@ -22,7 +22,7 @@ namespace SmartOrderManagement.Infrastructure.Repositories
             await _context.Products.AddAsync(product);
         }
 
-        public async Task DeleteAsync(Product product)
+        public void Delete(Product product)
         {
             product.IsDeleted = true;
         }
@@ -31,6 +31,15 @@ namespace SmartOrderManagement.Infrastructure.Repositories
         {
             var value=await _context.Products.Include(x=>x.Category).FirstOrDefaultAsync(x => x.ProductId == id);
             return value;
+        }
+
+        public async Task<List<Product>?> GetProductListByIdCategory(int categoryId)
+        {
+            return await _context.Products
+                .AsNoTracking()
+                .Include(x => x.Category)
+                .Where(x => x.CategoryId == categoryId)
+                .ToListAsync();
         }
 
         public async Task<List<Product>> GetProductsAsync(byte pageNumber, byte pageSize)
@@ -42,9 +51,23 @@ namespace SmartOrderManagement.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public async Task<List<Product>> GetProductsAsyncForRAG()
+        {
+            return await _context.Products.ToListAsync();
+                
+        }
+
         public async Task UpdateAsync(Product product)
         {
             _context.Products.Update(product);
+        }
+
+
+        //Bunu Deniyeceğiz product silerken ona bağlı order var ise onuda sileceğiz.
+        public async Task<Product?> DeleteProductNew(int id)
+        {
+            var value = await _context.Products.Include(x=>x.OrderItems).ThenInclude(x=>x.Order).FirstOrDefaultAsync(x => x.ProductId == id);
+            return value;
         }
     }
 }
